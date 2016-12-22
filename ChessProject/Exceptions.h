@@ -8,7 +8,6 @@ class OutOfBorderException : exception
 {
 public:
 	OutOfBorderException();
-	//menny was here
 	~OutOfBorderException();
 };
 
