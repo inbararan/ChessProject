@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Position::Position throws if row/col out of borders
+// Position::Position throws if row or col out of borders
 class OutOfBorderException : exception
 {
 public:
