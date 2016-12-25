@@ -9,7 +9,7 @@ using namespace std;
 
 class Unit
 {
-private:
+protected:
 	Position pos;
 	bool moved;
 public:
