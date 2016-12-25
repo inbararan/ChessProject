@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum Direction{up = 1, down = -1};
+enum Direction{Up = 1, Down = -1};
 
 class Position
 {
