@@ -9,8 +9,8 @@ enum Direction{Up = 1, Down = -1};
 class Position
 {
 private:
-	int row;
-	char col;
+	int rank; //row
+	char file; // col
 public:
 	Position(string repr); // Throws exception if out of board borders
 	~Position();

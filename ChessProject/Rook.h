@@ -1,14 +1,12 @@
 #include "Unit.h"
 
-enum CastlingOption{None, Long, Short};
-
 class Rook : Unit
 {
 private:
 	bool moved;
-	CastlingOption castlingOption;
+	CastlingType castlingOption;
 public:
-	Rook(Position pos, CastlingOption castlingOption);
+	Rook(Position pos, CastlingType castlingOption);
 	virtual ~Rook();
 
 	// All inherited from Unit:
