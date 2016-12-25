@@ -22,6 +22,6 @@ public:
 	virtual bool enPassantOption(Position dest); // True on Pawn only if dest is in two squares from pos. Assuming valid move
 	virtual bool canCommitEnPassant() const; // True on Pawn only
 	virtual bool promotionAvaliable(int promotionRow) const; // True on Pawn only if on promotion row
-	virtual bool longCastlingAvaliable() const; // Autmatically returns true if not King or big Rook
-	virtual bool shortCastlingAvaliable() const; // Autmatically returns true if not King or small Rook
+	virtual bool longCastlingAvaliable() const; // Autmatically returns true if not King or long castling Rook
+	virtual bool shortCastlingAvaliable() const; // Autmatically returns true if not King or short castling Rook
 };
