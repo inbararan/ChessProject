@@ -6,29 +6,30 @@
 
 using namespace std;
 
-#define PLAYERS_NUM 2
-#define OTHER(p) (PLAYERS_NUM - p)
-
 typedef struct EnPassantDetails
 {
 	vector<Position> imaginaryPositions;
 	int realUnitIdxInSet;
+	bool isSet;
 } EnPassantDetails;
 
 class Game
 {
 private:
-	Player players[PLAYERS_NUM];
-	int currPlayerIdx;
+	Player player1; // White
+	Player player2; // Black
+	bool currentPlayerIndicator; // true means player1
 	EnPassantDetails enPassantDetails;
 
-	bool isCheck(int playerIdx);
+	Player& currentPlayer();
+	Player& currentOpponent();
+	bool isCheck(bool currentPlayer);
 	bool isCheckmate();
 public:
 	Game();
 	Game(const Game& other);
 	~Game();
 
-	int nextMove(string moveRepr); // Returns code
+	string nextMove(string moveRepr); // Returns code
 	string getBoardRepr() const;
 };
