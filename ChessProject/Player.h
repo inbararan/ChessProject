@@ -23,7 +23,7 @@ public:
 	vector<Unit*> unitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	vector<Unit*> unitsDangering(vector<Position> positions) const; // Use in check and castling
 	Unit* getUnit(Position pos) const;
-	void affect(char board[][MAX_RANK - MIN_RANK + 1], bool toUpper) const;
+	void affect(string board, bool toUpper) const;
 
 	bool longCastlingAvaliable() const;
 	bool shortCastlingAvaliable() const;

@@ -6,6 +6,9 @@
 
 using namespace std;
 
+#define WHITE true
+#define BLACK false
+
 typedef struct EnPassantDetails
 {
 	vector<Position> imaginaryPositions;
@@ -23,8 +26,8 @@ private:
 
 	Player& currentPlayer();
 	Player& currentOpponent();
-	bool isCheck(bool currentPlayer);
-	bool isCheckmate();
+	bool isCheckTo(bool currentPlayer);
+	bool isCheckmateTo(bool currentPlayer);
 public:
 	Game();
 	Game(const Game& other);
