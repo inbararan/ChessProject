@@ -11,8 +11,8 @@ using namespace std;
 
 typedef struct EnPassantDetails
 {
-	Position imaganaryPos;
-	int candidateIdxInSet;
+	vector<Position> imaginaryPositions;
+	int realUnitIdxInSet;
 } EnPassantDetails;
 
 class Game

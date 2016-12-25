@@ -21,6 +21,7 @@ public:
 	vector<Unit*> unitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	vector<Unit*> unitsDangering(vector<Position> positions) const; // Use in check and castling
 	Unit* getUnit(Position pos) const;
+	void affect(char* board, bool toUpper);
 
 	bool longCastlingAvaliable() const;
 	bool shortCastlingAvaliable() const;
