@@ -19,10 +19,10 @@ typedef struct EnPassantDetails
 class Game
 {
 private:
-	Player player1; // White
-	Player player2; // Black
-	bool currentPlayerIndicator; // true means player1
-	EnPassantDetails enPassantDetails;
+	Player _player1; // White
+	Player _player2; // Black
+	bool _currentPlayerIndicator; // true means player1
+	EnPassantDetails _enPassantDetails;
 
 	Player& currentPlayer();
 	Player& currentOpponent();

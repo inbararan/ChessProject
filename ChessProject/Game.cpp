@@ -1,15 +1,15 @@
 #include "Game.h"
 
-Game::Game() : player1(Player(Up)), player2(Player(Down))
+Game::Game() : _player1(Player(Up)), _player2(Player(Down))
 {
-	currentPlayerIndicator = WHITE;
-	enPassantDetails.isSet = false;
+	_currentPlayerIndicator = WHITE;
+	_enPassantDetails.isSet = false;
 }
 
-Game::Game(const Game& other) : player1(Player(other.player1)), player2(Player(other.player2))
+Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Player(other._player2))
 {
-	currentPlayerIndicator = other.currentPlayerIndicator;
-	enPassantDetails = other.enPassantDetails;
+	_currentPlayerIndicator = other._currentPlayerIndicator;
+	_enPassantDetails = other._enPassantDetails;
 }
 
 Game::~Game()
@@ -27,21 +27,20 @@ string Game::getBoardRepr() const
 {
 	string repr = "";
 	repr.assign(64, '#');
-	char board[BOARD_SIZE][BOARD_SIZE] = { 0 };
-	player1.affect(board, true); // White
-	player2.affect(board, false); // Black
-	repr += currentPlayerIndicator ? '0' : '1';
+	_player1.affect(repr, true); // White
+	_player2.affect(repr, false); // Black
+	repr += _currentPlayerIndicator ? '0' : '1';
 	return repr;
 }
 
 Player& Game::currentPlayer()
 {
-	return currentPlayerIndicator ? player1 : player2;
+	return _currentPlayerIndicator ? _player1 : _player2;
 }
 
 Player& Game::currentOpponent()
 {
-	return currentPlayerIndicator ? player2 : player1;
+	return _currentPlayerIndicator ? _player2 : _player1;
 }
 
 bool isCheckTo(bool currentPlayer)

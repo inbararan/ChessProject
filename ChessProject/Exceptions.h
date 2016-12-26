@@ -5,11 +5,11 @@
 using namespace std;
 
 // Position::Position throws if row or col out of borders
-class OutOfBorderException : exception
+class OutOfBoardException : exception
 {
 public:
-	OutOfBorderException();
-	~OutOfBorderException();
+	OutOfBoardException();
+	~OutOfBoardException();
 };
 
 // Unit::pathToMove throws if dest unrachable
