@@ -9,6 +9,7 @@ int getAbsoluteRank(int relativeRank, Direction userDirection)
 	case Down:
 		return MAX_RANK - relativeRank;
 	}
+	throw UnknownDirectionException();
 }
 
 Player::Player(Direction direction)

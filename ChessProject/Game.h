@@ -31,7 +31,6 @@ private:
 public:
 	Game();
 	Game(const Game& other);
-	~Game();
 
 	string nextMove(string moveRepr); // Returns code
 	string getBoardRepr() const;

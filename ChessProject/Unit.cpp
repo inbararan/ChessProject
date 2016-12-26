@@ -18,7 +18,7 @@ void Unit::move(Position dest)
 bool Unit::dangeringOneOf(vector<Position> positions, Direction playerDirection)
 {
 	bool isDangering = false;
-	for (int i = 0; i < positions.size() & !isDangering; i++)
+	for (int i = 0; i < positions.size() && !isDangering; i++)
 	{
 		if (!pathToPosition(positions[i], true, playerDirection).empty())
 		{

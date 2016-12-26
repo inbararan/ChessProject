@@ -18,3 +18,7 @@ class UnreachablePositionException : exception
 class DestinationIsPositionException : exception
 {
 };
+
+class UnknownDirectionException : exception
+{
+};

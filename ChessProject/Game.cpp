@@ -5,18 +5,13 @@ Game::Game() : _player1(Player(Up)), _player2(Player(Down))
 	_currentPlayerIndicator = WHITE;
 	_enPassantDetails.isSet = false;
 }
-
+/*
 Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Player(other._player2))
 {
 	_currentPlayerIndicator = other._currentPlayerIndicator;
 	_enPassantDetails = other._enPassantDetails;
 }
-
-Game::~Game()
-{
-	
-}
-
+*/
 string Game::nextMove(string moveRepr)
 {
 	//TODO

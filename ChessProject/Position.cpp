@@ -50,7 +50,7 @@ bool Position::operator==(const Position& other) const
 	return _file == other._file && _rank == other._rank;
 }
 
-static vector<Position> positionsRangeOnFile(char file, int rankLimit1, int rankLimit2)
+vector<Position> Position::positionsRangeOnFile(char file, int rankLimit1, int rankLimit2)
 {
 	vector<Position> positions = vector<Position>();
 	for (int r = MIN(rankLimit1, rankLimit2) + 1; r < MAX(rankLimit1, rankLimit2); r++)
@@ -60,7 +60,7 @@ static vector<Position> positionsRangeOnFile(char file, int rankLimit1, int rank
 	return positions;
 }
 
-static vector<Position> positionsRangeOnRank(int rank, char fileLimit1, char fileLimit2)
+vector<Position> Position::positionsRangeOnRank(int rank, char fileLimit1, char fileLimit2)
 {
 	vector<Position> positions = vector<Position>();
 	for (int f = MIN(fileLimit1, fileLimit2) + 1; f < MAX(fileLimit1, fileLimit2); f++)
