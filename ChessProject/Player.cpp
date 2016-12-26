@@ -7,7 +7,7 @@ int getAbsoluteRank(int relativeRank, Direction userDirection)
 	case Up:
 		return relativeRank;
 	case Down:
-		return MAX_RANK - relativeRank;
+		return MAX_RANK + 1 - relativeRank;
 	}
 	throw UnknownDirectionException();
 }
@@ -15,7 +15,9 @@ int getAbsoluteRank(int relativeRank, Direction userDirection)
 Player::Player(Direction direction)
 {
 	_set = vector<Unit*>();
-	_set.push_back(new Queen(Position('d', getAbsoluteRank(1, direction))));
+	_set.push_back(new Queen(Position('a', getAbsoluteRank(1, direction))));
+	_set.push_back(new Queen(Position('b', getAbsoluteRank(2, direction))));
+	_set.push_back(new Queen(Position('g', getAbsoluteRank(2, direction))));
 	_direction = direction;
 }
 /*
