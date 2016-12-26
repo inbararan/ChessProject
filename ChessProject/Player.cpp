@@ -28,6 +28,14 @@ Player::Player(const Player& other)
 	direction = other.direction;
 }
 */
+Player::~Player()
+{
+	for (int i = 0; i < _set.size(); i++)
+	{
+		delete _set[i];
+	}
+}
+
 vector<Unit*> Player::unitsIn(vector<Position> positions) const
 {
 	vector<Unit*> units = vector<Unit*>();
@@ -106,6 +114,7 @@ bool Player::castlingAvaliable(CastlingType castlingType) const
 			avaliable = false;
 		}
 	}
+	return avaliable;
 }
 
 void Player::commitCastling(CastlingType castlingType)

@@ -20,6 +20,26 @@ Position::Position(char file, int rank)
 	_rank = rank;
 }
 
+char Position::getFile() const
+{
+	return _file;
+}
+
+int Position::getRank() const
+{
+	return _rank;
+}
+
+bool Position::sameFile(Position pos) const
+{
+	return _file == pos._file;
+}
+
+bool Position::sameRank(Position pos) const
+{
+	return _rank == pos._rank;
+}
+
 int Position::index() const
 {
 	return (_file - MIN_FILE) * BOARD_SIZE + (_rank - MIN_RANK);
@@ -28,4 +48,24 @@ int Position::index() const
 bool Position::operator==(const Position& other) const
 {
 	return _file == other._file && _rank == other._rank;
+}
+
+static vector<Position> positionsRangeOnFile(char file, int rankLimit1, int rankLimit2)
+{
+	vector<Position> positions = vector<Position>();
+	for (int r = MIN(rankLimit1, rankLimit2) + 1; r < MAX(rankLimit1, rankLimit2); r++)
+	{
+		positions.push_back(Position(file, r));
+	}
+	return positions;
+}
+
+static vector<Position> positionsRangeOnRank(int rank, char fileLimit1, char fileLimit2)
+{
+	vector<Position> positions = vector<Position>();
+	for (int f = MIN(fileLimit1, fileLimit2) + 1; f < MAX(fileLimit1, fileLimit2); f++)
+	{
+		positions.push_back(Position(f, rank));
+	}
+	return positions;
 }

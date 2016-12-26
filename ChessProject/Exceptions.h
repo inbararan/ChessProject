@@ -7,15 +7,14 @@ using namespace std;
 // Position::Position throws if row or col out of borders
 class OutOfBoardException : exception
 {
-public:
-	OutOfBoardException();
-	~OutOfBoardException();
 };
 
-// Unit::pathToMove throws if dest unrachable
+// Unit::pathToPosition throws if dest unrachable
 class UnreachablePositionException : exception
 {
-public:
-	UnreachablePositionException();
-	~UnreachablePositionException();
+};
+
+// Unit::pathToPosition throws if dest equals to current position of unit
+class DestinationIsPositionException : exception
+{
 };

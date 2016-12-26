@@ -10,6 +10,11 @@ Position Unit::getPos() const
 	return _pos;
 }
 
+void Unit::move(Position dest)
+{
+	_pos = Position(dest);
+}
+
 bool Unit::dangeringOneOf(vector<Position> positions, Direction playerDirection)
 {
 	bool isDangering = false;
