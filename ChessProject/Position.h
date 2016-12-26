@@ -24,4 +24,5 @@ public:
 	Position(char file, int rank); // Throws exception if out of board borders
 	
 	int index() const; // Index in board repr
+	bool operator==(const Position& other) const;
 };

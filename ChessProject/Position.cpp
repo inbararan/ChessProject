@@ -24,3 +24,8 @@ int Position::index() const
 {
 	return (_file - MIN_FILE) * BOARD_SIZE + (_rank - MIN_RANK);
 }
+
+bool Position::operator==(const Position& other) const
+{
+	return _file == other._file && _rank == other._rank;
+}

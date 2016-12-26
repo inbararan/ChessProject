@@ -5,9 +5,22 @@ Unit::Unit(Position pos) : _pos(pos)
 
 }
 
-int Unit::posIndex() const
+Position Unit::getPos() const
 {
-	return _pos.index();
+	return _pos;
+}
+
+bool Unit::dangeringOneOf(vector<Position> positions, Direction playerDirection)
+{
+	bool isDangering = false;
+	for (int i = 0; i < positions.size() & !isDangering; i++)
+	{
+		if (!pathToPosition(positions[i], true, playerDirection).empty())
+		{
+			isDangering = true;
+		}
+	}
+	return isDangering;
 }
 
 char Unit::repr(bool toUpper) const
@@ -30,16 +43,10 @@ bool Unit::promotionAvaliable(int promotionRank) const
 	return false;
 }
 
-bool Unit::longCastlingAvaliable() const
+bool Unit::castlingAvaliable(CastlingType castlingType) const
 {
 	return false;
 }
-
-bool Unit::shortCastlingAvaliable() const
-{
-	return false;
-}
-
 CastlingType Unit::avaliableCastling(Position dest) const
 {
 	return None;
@@ -47,5 +54,5 @@ CastlingType Unit::avaliableCastling(Position dest) const
 
 void Unit::commitCastling(CastlingType castlingType) const
 {
-
+	// Does nothing
 }
