@@ -39,6 +39,11 @@ Player::~Player()
 	}
 }
 
+Direction Player::getDirection() const
+{
+	return _direction;
+}
+
 vector<Unit*> Player::unitsIn(vector<Position> positions) const
 {
 	vector<Unit*> units = vector<Unit*>();
@@ -69,8 +74,10 @@ vector<Unit*> Player::unitsDangering(vector<Position> positions) const
 Unit* Player::getUnit(Position pos) const
 {
 	Unit* unit = nullptr;
+	cout << "pos:" << pos.getFile() << pos.getRank() << endl;
 	for (int i = 0; i < _set.size() && unit == nullptr; i++)
 	{
+		cout << i << ":" << _set[i]->getPos().getFile() << _set[i]->getPos().getRank() << endl;
 		if (_set[i]->getPos() == pos)
 		{
 			unit = _set[i];
@@ -86,7 +93,10 @@ void Player::takeUnit(Position pos)
 
 void Player::takeUnit(Unit* unit)
 {
-	_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
+	if (unit != nullptr)
+	{
+		_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
+	}
 }
 
 void Player::affect(string& board, bool toUpper) const

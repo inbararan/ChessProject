@@ -19,6 +19,8 @@ public:
 	Player(const Player& other);
 	~Player();
 
+	Direction getDirection() const;
+
 	vector<Unit*> unitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	vector<Unit*> unitsDangering(vector<Position> positions) const; // Use in check and castling
 	Unit* getUnit(Position pos) const;

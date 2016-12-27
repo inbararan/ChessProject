@@ -14,8 +14,48 @@ Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Playe
 */
 string Game::nextMove(string moveRepr)
 {
-	//TODO
-	return "00";
+	try
+	{
+		// First, parse moveRepr
+		Position src = Position(moveRepr.substr(0, 2));
+		Position dst = Position(moveRepr.substr(2, 2));
+		// Find source Unit
+		Unit* unit = currentPlayer().getUnit(src);
+		// Check src and dst
+		if (unit == nullptr) // Current player has no units in src
+		{
+			return SRC_NOT_OCUUPIED;
+		}
+		if (currentPlayer().getUnit(dst) != nullptr)
+		{
+			return DST_OCCUPIED;
+		}
+		// Check if src can move to dst
+		vector<Position> path = unit->pathToPosition(dst, currentOpponent().getUnit(dst) != nullptr, currentPlayer().getDirection());
+		if (currentPlayer().unitsIn(path).empty() && currentOpponent().unitsIn(path).empty())
+		{
+			unit->move(dst);
+			currentOpponent().takeUnit(dst);
+			_currentPlayerIndicator = !_currentPlayerIndicator;
+		}
+		else
+		{
+			return ILLEGAL_MOVEMENT; // ?
+		}
+	}
+	catch (OutOfBoardException e)
+	{
+		return OUT_OF_BORDER;
+	}
+	catch (UnreachablePositionException e)
+	{
+		return ILLEGAL_MOVEMENT;
+	}
+	catch (DestinationIsPositionException e)
+	{
+		return DST_EQL_SRC;
+	}
+	return isCheckTo(!_currentPlayerIndicator) ? CHECK : OK;
 }
 
 string Game::getBoardRepr() const
@@ -38,13 +78,13 @@ Player& Game::currentOpponent()
 	return _currentPlayerIndicator ? _player2 : _player1;
 }
 
-bool isCheckTo(bool currentPlayer)
+bool Game::isCheckTo(bool currentPlayer)
 {
 	//TODO
 	return false;
 }
 
-bool isCheckmateTo(bool currentPlayer)
+bool Game::isCheckmateTo(bool currentPlayer)
 {
 	//TODO
 	return false;

@@ -2,8 +2,9 @@
 
 Position::Position(string repr)
 {
-	if (repr[0] > MAX_FILE || repr[0] < MIN_FILE || repr[1] > MAX_RANK || repr[1] < MIN_RANK)
+	if (repr[0] > MAX_FILE || repr[0] < MIN_FILE || (repr[1] - '0') > MAX_RANK || (repr[1] - '0') < MIN_RANK)
 	{
+		cout << "repr is: " << repr << endl;
 		throw OutOfBoardException();
 	}
 	_file = repr[0];
@@ -14,6 +15,7 @@ Position::Position(char file, int rank)
 {
 	if (file > MAX_FILE || file < MIN_FILE || rank > MAX_RANK || rank < MIN_RANK)
 	{
+		cout << "file is: " << file << ", rank is " << rank << endl;
 		throw OutOfBoardException();
 	}
 	_file = file;
@@ -42,7 +44,7 @@ bool Position::sameRank(Position pos) const
 
 int Position::index() const
 {
-	return (_file - MIN_FILE) * BOARD_SIZE + (_rank - MIN_RANK);
+	return (MAX_RANK - _rank) * BOARD_SIZE + (_file - MIN_FILE);
 }
 
 bool Position::operator==(const Position& other) const
@@ -53,6 +55,7 @@ bool Position::operator==(const Position& other) const
 vector<Position> Position::positionsRangeOnFile(char file, int rankLimit1, int rankLimit2)
 {
 	vector<Position> positions = vector<Position>();
+	cout << "file:" << file << ":" << rankLimit1 << "=>" << rankLimit2 << endl;
 	for (int r = MIN(rankLimit1, rankLimit2) + 1; r < MAX(rankLimit1, rankLimit2); r++)
 	{
 		positions.push_back(Position(file, r));
@@ -63,6 +66,7 @@ vector<Position> Position::positionsRangeOnFile(char file, int rankLimit1, int r
 vector<Position> Position::positionsRangeOnRank(int rank, char fileLimit1, char fileLimit2)
 {
 	vector<Position> positions = vector<Position>();
+	cout << "rank:" << rank << ":" << fileLimit1 << "=>" << fileLimit2 << endl;
 	for (int f = MIN(fileLimit1, fileLimit2) + 1; f < MAX(fileLimit1, fileLimit2); f++)
 	{
 		positions.push_back(Position(f, rank));

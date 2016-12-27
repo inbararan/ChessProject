@@ -18,7 +18,7 @@ vector<Position> Queen::pathToPosition(Position dest, bool enemyThere, Direction
 	}
 	else if (dest.sameRank(_pos))
 	{
-		return Position::positionsRangeOnFile(_pos.getRank(), dest.getFile(), _pos.getFile());
+		return Position::positionsRangeOnRank(_pos.getRank(), dest.getFile(), _pos.getFile());
 	}
 	else
 	{
