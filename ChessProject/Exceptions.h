@@ -14,11 +14,7 @@ class UnreachablePositionException : exception
 {
 };
 
-// Unit::pathToPosition throws if dest equals to current position of unit
-class DestinationIsPositionException : exception
-{
-};
-
+// Position::Position (one overload) throws if playerDirection is not Up nor Down
 class UnknownDirectionException : exception
 {
 };

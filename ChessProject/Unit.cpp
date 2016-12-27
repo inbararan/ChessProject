@@ -1,6 +1,6 @@
 #include "Unit.h"
 
-Unit::Unit(Position pos) : _pos(pos)
+Unit::Unit(Position pos) : _pos(pos), _moved(false)
 {
 
 }
@@ -13,19 +13,43 @@ Position Unit::getPos() const
 void Unit::move(Position dest)
 {
 	_pos = Position(dest);
+	_moved = true;
 }
 
 bool Unit::dangeringOneOf(vector<Position> positions, Direction playerDirection)
 {
-	bool isDangering = false;
-	for (int i = 0; i < positions.size() && !isDangering; i++)
+	bool dangering = false;
+	for (int i = 0; i < positions.size() && !dangering; i++)
 	{
-		if (!pathToPosition(positions[i], true, playerDirection).empty())
+		try
 		{
-			isDangering = true;
+			pathToPosition(positions[i], true, playerDirection);
+			dangering = true;
+		}
+		catch (UnreachablePositionException e)
+		{
+			// positions[i] is not takeable by *this
 		}
 	}
-	return isDangering;
+	return dangering;
+}
+
+bool Unit::dangeringOneOf(vector<Unit*> units, Direction playerDirection)
+{
+	bool dangering = false;
+	for (int i = 0; i < units.size() && !dangering; i++)
+	{
+		try
+		{
+			pathToPosition(units[i]->getPos(), true, playerDirection);
+			dangering = true;
+		}
+		catch (UnreachablePositionException e)
+		{
+			// units[i] is not takeable by *this
+		}
+	}
+	return dangering;
 }
 
 char Unit::repr(bool toUpper) const
@@ -59,5 +83,10 @@ CastlingType Unit::avaliableCastling(Position dest) const
 
 void Unit::commitCastling(CastlingType castlingType) const
 {
-	// Does nothing
+	// Supposed to do nothing
+}
+
+bool Unit::vital() const
+{
+	return false;
 }

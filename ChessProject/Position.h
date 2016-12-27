@@ -28,6 +28,7 @@ private:
 public:
 	Position(string repr); // Throws exception if out of board borders
 	Position(char file, int rank); // Throws exception if out of board borders
+	Position(char file, int relativeRank, Direction direction); // Throws exception if out of board borders
 	
 	char getFile() const;
 	int getRank() const;
@@ -37,6 +38,7 @@ public:
 
 	int index() const; // Index in board repr
 	bool operator==(const Position& other) const;
+	bool operator!=(const Position& other) const;
 
 	static vector<Position> positionsRangeOnFile(char file, int minRank, int maxRank);
 	static vector<Position> positionsRangeOnRank(int rank, char minFile, char maxFile);

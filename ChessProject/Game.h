@@ -34,10 +34,11 @@ private:
 	bool _currentPlayerIndicator; // true means player1
 	EnPassantDetails _enPassantDetails;
 
+	Player& getPlayer(bool playerIndicator);
 	Player& currentPlayer();
 	Player& currentOpponent();
-	bool isCheckTo(bool currentPlayer);
-	bool isCheckmateTo(bool currentPlayer);
+	bool isCheckTo(bool playerIndicator);
+	bool isCheckmateTo(bool playerIndicator);
 public:
 	Game();
 	Game(const Game& other);

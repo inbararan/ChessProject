@@ -22,6 +22,27 @@ Position::Position(char file, int rank)
 	_rank = rank;
 }
 
+Position::Position(char file, int relativeRank, Direction playerDirection)
+{
+	if (file > MAX_FILE || file < MIN_FILE || relativeRank > MAX_RANK || relativeRank < MIN_RANK)
+	{
+		cout << "file is: " << file << ", rank is " << relativeRank << endl;
+		throw OutOfBoardException();
+	}
+	_file = file;
+	switch (playerDirection)
+	{
+	case Up:
+		_rank = relativeRank;
+		break;
+	case Down:
+		_rank = MAX_RANK + 1 - relativeRank;
+		break;
+	default:
+		throw UnknownDirectionException();
+	}
+}
+
 char Position::getFile() const
 {
 	return _file;
@@ -52,10 +73,14 @@ bool Position::operator==(const Position& other) const
 	return _file == other._file && _rank == other._rank;
 }
 
+bool Position::operator!=(const Position& other) const
+{
+	return !(operator==(other));
+}
+
 vector<Position> Position::positionsRangeOnFile(char file, int rankLimit1, int rankLimit2)
 {
 	vector<Position> positions = vector<Position>();
-	cout << "file:" << file << ":" << rankLimit1 << "=>" << rankLimit2 << endl;
 	for (int r = MIN(rankLimit1, rankLimit2) + 1; r < MAX(rankLimit1, rankLimit2); r++)
 	{
 		positions.push_back(Position(file, r));
@@ -66,7 +91,6 @@ vector<Position> Position::positionsRangeOnFile(char file, int rankLimit1, int r
 vector<Position> Position::positionsRangeOnRank(int rank, char fileLimit1, char fileLimit2)
 {
 	vector<Position> positions = vector<Position>();
-	cout << "rank:" << rank << ":" << fileLimit1 << "=>" << fileLimit2 << endl;
 	for (int f = MIN(fileLimit1, fileLimit2) + 1; f < MAX(fileLimit1, fileLimit2); f++)
 	{
 		positions.push_back(Position(f, rank));

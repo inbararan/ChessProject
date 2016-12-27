@@ -1,23 +1,13 @@
 #include "Player.h"
 
-int getAbsoluteRank(int relativeRank, Direction userDirection)
-{
-	switch (userDirection)
-	{
-	case Up:
-		return relativeRank;
-	case Down:
-		return MAX_RANK + 1 - relativeRank;
-	}
-	throw UnknownDirectionException();
-}
 
 Player::Player(Direction direction)
 {
 	_set = vector<Unit*>();
-	_set.push_back(new Queen(Position('a', getAbsoluteRank(1, direction))));
-	_set.push_back(new Queen(Position('b', getAbsoluteRank(2, direction))));
-	_set.push_back(new Queen(Position('g', getAbsoluteRank(2, direction))));
+	_set.push_back(new King(Position('c', 1, direction)));
+	_set.push_back(new Queen(Position('a', 1, direction)));
+	_set.push_back(new Queen(Position('b', 2, direction)));
+	_set.push_back(new Queen(Position('g', 2, direction)));
 	_direction = direction;
 }
 /*
@@ -44,7 +34,7 @@ Direction Player::getDirection() const
 	return _direction;
 }
 
-vector<Unit*> Player::unitsIn(vector<Position> positions) const
+bool Player::hasUnitsIn(vector<Position> positions) const
 {
 	vector<Unit*> units = vector<Unit*>();
 	for (int i = 0; i < positions.size(); i++)
@@ -55,15 +45,41 @@ vector<Unit*> Player::unitsIn(vector<Position> positions) const
 			units.push_back(unit);
 		}
 	}
-	return units;
+	return !units.empty();
 }
 
-vector<Unit*> Player::unitsDangering(vector<Position> positions) const
+bool Player::isDangeringOneOf(vector<Position> positions) const
 {
 	vector<Unit*> units = vector<Unit*>();
 	for (int i = 0; i < _set.size(); i++)
 	{
 		if (_set[i]->dangeringOneOf(positions, _direction))
+		{
+			units.push_back(_set[i]);
+		}
+	}
+	return !units.empty();
+}
+
+bool Player::isDangeringOneOf(vector<Unit*> units) const
+{
+	vector<Unit*> dangeringUnits = vector<Unit*>();
+	for (int i = 0; i < _set.size(); i++)
+	{
+		if (_set[i]->dangeringOneOf(units, _direction))
+		{
+			dangeringUnits.push_back(_set[i]);
+		}
+	}
+	return !dangeringUnits.empty();
+}
+
+vector<Unit*> Player::vitalUnits() const
+{
+	vector<Unit*> units = vector<Unit*>();
+	for (int i = 0; i < _set.size(); i++)
+	{
+		if (_set[i]->vital())
 		{
 			units.push_back(_set[i]);
 		}

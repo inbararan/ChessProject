@@ -1,13 +1,11 @@
 #include "Unit.h"
 
-class Pawn
+class Pawn : public Unit
 {
 private:
-	bool _moved;
 	virtual char repr() const; // Actually `static` - indpendent of instance properties
 public:
 	Pawn(Position pos);
-	virtual ~Pawn();
 
 	// All overrides inherited methods from Unit:
 	virtual vector<Position> pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const; // Throws exception if dest unreachable

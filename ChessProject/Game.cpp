@@ -1,5 +1,31 @@
 #include "Game.h"
 
+Player& Game::getPlayer(bool playerIndicator)
+{
+	return playerIndicator ? _player1 : _player2;
+}
+
+Player& Game::currentPlayer()
+{
+	return getPlayer(_currentPlayerIndicator);
+}
+
+Player& Game::currentOpponent()
+{
+	return getPlayer(!_currentPlayerIndicator);
+}
+
+bool Game::isCheckTo(bool playerIndicator)
+{
+	return getPlayer(!playerIndicator).isDangeringOneOf(getPlayer(playerIndicator).vitalUnits());
+}
+
+bool Game::isCheckmateTo(bool playerIndicator)
+{
+	//TODO
+	return false;
+}
+
 Game::Game() : _player1(Player(Up)), _player2(Player(Down))
 {
 	_currentPlayerIndicator = WHITE;
@@ -19,6 +45,11 @@ string Game::nextMove(string moveRepr)
 		// First, parse moveRepr
 		Position src = Position(moveRepr.substr(0, 2));
 		Position dst = Position(moveRepr.substr(2, 2));
+		// Make sure there is an actual MOVEMENT trial
+		if (src == dst)
+		{
+			return DST_EQL_SRC;
+		}
 		// Find source Unit
 		Unit* unit = currentPlayer().getUnit(src);
 		// Check src and dst
@@ -32,11 +63,10 @@ string Game::nextMove(string moveRepr)
 		}
 		// Check if src can move to dst
 		vector<Position> path = unit->pathToPosition(dst, currentOpponent().getUnit(dst) != nullptr, currentPlayer().getDirection());
-		if (currentPlayer().unitsIn(path).empty() && currentOpponent().unitsIn(path).empty())
+		if (!currentPlayer().hasUnitsIn(path) && !currentOpponent().hasUnitsIn(path))
 		{
 			unit->move(dst);
 			currentOpponent().takeUnit(dst);
-			_currentPlayerIndicator = !_currentPlayerIndicator;
 		}
 		else
 		{
@@ -51,11 +81,9 @@ string Game::nextMove(string moveRepr)
 	{
 		return ILLEGAL_MOVEMENT;
 	}
-	catch (DestinationIsPositionException e)
-	{
-		return DST_EQL_SRC;
-	}
-	return isCheckTo(!_currentPlayerIndicator) ? CHECK : OK;
+	string status = isCheckTo(!_currentPlayerIndicator) ? CHECK : OK;
+	_currentPlayerIndicator = !_currentPlayerIndicator;
+	return status;
 }
 
 string Game::getBoardRepr() const
@@ -66,26 +94,4 @@ string Game::getBoardRepr() const
 	_player2.affect(repr, false); // Black
 	repr += _currentPlayerIndicator ? '0' : '1';
 	return repr;
-}
-
-Player& Game::currentPlayer()
-{
-	return _currentPlayerIndicator ? _player1 : _player2;
-}
-
-Player& Game::currentOpponent()
-{
-	return _currentPlayerIndicator ? _player2 : _player1;
-}
-
-bool Game::isCheckTo(bool currentPlayer)
-{
-	//TODO
-	return false;
-}
-
-bool Game::isCheckmateTo(bool currentPlayer)
-{
-	//TODO
-	return false;
 }

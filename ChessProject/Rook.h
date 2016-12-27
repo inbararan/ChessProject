@@ -1,14 +1,12 @@
 #include "Unit.h"
 
-class Rook : Unit
+class Rook : public Unit
 {
 private:
-	bool _moved;
 	CastlingType _castlingAvaliablity;
 	virtual char repr() const; // Actually `static` - indpendent of instance properties
 public:
 	Rook(Position pos, CastlingType _castlingAvaliablity);
-	virtual ~Rook();
 
 	// All overrides inherited methods from Unit:
 	virtual vector<Position> pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const; // Throws exception if dest unreachable

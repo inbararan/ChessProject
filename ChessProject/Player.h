@@ -5,6 +5,7 @@
 
 #include "Unit.h"
 #include "Queen.h"
+#include "King.h"
 
 using namespace std;
 
@@ -13,7 +14,6 @@ class Player
 private:
 	vector<Unit*> _set;
 	Direction _direction;
-
 public:
 	Player(Direction direction);
 	Player(const Player& other);
@@ -21,8 +21,10 @@ public:
 
 	Direction getDirection() const;
 
-	vector<Unit*> unitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
-	vector<Unit*> unitsDangering(vector<Position> positions) const; // Use in check and castling
+	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
+	bool isDangeringOneOf(vector<Position> positions) const; // Use in castling
+	bool isDangeringOneOf(vector<Unit*> units) const; // Use in check
+	vector<Unit*> vitalUnits() const;
 	Unit* getUnit(Position pos) const;
 	void takeUnit(Position pos);
 	void takeUnit(Unit* unit);
