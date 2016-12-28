@@ -24,7 +24,6 @@ vector<Position> Rook::pathToPosition(Position dest, bool enemyThere, Direction 
 bool Rook::castlingAvaliable(CastlingType castlingType) const
 {
 	return (_castlingAvaliablity == castlingType) && !_moved;
-	
 }
 // Does anything only if castlingType fits _castlingAvaliablity
 void Rook::commitCastling(CastlingType castlingType) const
