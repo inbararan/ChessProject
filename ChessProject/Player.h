@@ -6,6 +6,7 @@
 #include "Unit.h"
 #include "Queen.h"
 #include "King.h"
+#include "Rook.h"
 
 using namespace std;
 

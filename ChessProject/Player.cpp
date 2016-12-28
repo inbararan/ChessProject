@@ -4,10 +4,9 @@
 Player::Player(Direction direction)
 {
 	_set = vector<Unit*>();
-	_set.push_back(new King(Position('c', 1, direction)));
-	_set.push_back(new Queen(Position('a', 1, direction)));
-	_set.push_back(new Queen(Position('b', 2, direction)));
-	_set.push_back(new Queen(Position('g', 2, direction)));
+	_set.push_back(new Rook(Position('a', 1, direction), Long));
+	_set.push_back(new King(Position('e', 1, direction)));
+	_set.push_back(new Rook(Position('h', 1, direction), Short));
 	_direction = direction;
 }
 /*

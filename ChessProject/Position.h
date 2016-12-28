@@ -26,8 +26,8 @@ private:
 	char _file; // col
 	int _rank; //row
 public:
-	Position(string repr); // Throws exception if out of board borders
 	Position(char file, int rank); // Throws exception if out of board borders
+	Position(string repr); // Throws exception if out of board borders
 	Position(char file, int relativeRank, Direction direction); // Throws exception if out of board borders
 	
 	char getFile() const;

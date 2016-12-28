@@ -3,8 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 char Rook::repr() const
 {
 	return 'r';
@@ -44,7 +42,7 @@ vector<Position> Rook::pathToPosition(Position dest, bool enemyThere, Direction 
 			minFile = min(dest.getFile(), _pos.getFile());
 			maxFile = max(dest.getFile(), _pos.getFile());
 
-			for (char i = minFile; i < maxFile; i++)
+			for (char i = minFile + 1; i < maxFile; i++)
 			{
 				Position p(i, _pos.getRank());
 				positions.push_back(p);
@@ -56,9 +54,9 @@ vector<Position> Rook::pathToPosition(Position dest, bool enemyThere, Direction 
 
 bool Rook::castlingAvaliable(CastlingType castlingType) const
 {
-	return (_castlingAvaliablity == castlingType) && !_moved;
+	return _castlingAvaliablity == castlingType && !_moved;
 }
-// Does anything only if castlingType fits _castlingAvaliablity
+
 void Rook::commitCastling(CastlingType castlingType) const
 {
 

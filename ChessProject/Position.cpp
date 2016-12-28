@@ -1,42 +1,29 @@
 #include "Position.h"
 
-Position::Position(string repr)
-{
-	if (repr[0] > MAX_FILE || repr[0] < MIN_FILE || (repr[1] - '0') > MAX_RANK || (repr[1] - '0') < MIN_RANK)
-	{
-		cout << "repr is: " << repr << endl;
-		throw OutOfBoardException();
-	}
-	_file = repr[0];
-	_rank = repr[1] - '0';
-}
-
 Position::Position(char file, int rank)
 {
 	if (file > MAX_FILE || file < MIN_FILE || rank > MAX_RANK || rank < MIN_RANK)
 	{
-		cout << "file is: " << file << ", rank is " << rank << endl;
 		throw OutOfBoardException();
 	}
 	_file = file;
 	_rank = rank;
 }
 
-Position::Position(char file, int relativeRank, Direction playerDirection)
+Position::Position(string repr) : Position(repr[0], repr[1] - '0')
 {
-	if (file > MAX_FILE || file < MIN_FILE || relativeRank > MAX_RANK || relativeRank < MIN_RANK)
-	{
-		cout << "file is: " << file << ", rank is " << relativeRank << endl;
-		throw OutOfBoardException();
-	}
-	_file = file;
+}
+
+Position::Position(char file, int relativeRank, Direction playerDirection) : Position(file, 1)
+{
+	// Getting relaive rank (first rank, second rank, etc.) and setting the absolute rank (Black's first rank is actually the 8'th)
 	switch (playerDirection)
 	{
 	case Up:
 		_rank = relativeRank;
 		break;
 	case Down:
-		_rank = MAX_RANK + 1 - relativeRank;
+		_rank = MAX_RANK + MIN_RANK - relativeRank;
 		break;
 	default:
 		throw UnknownDirectionException();
@@ -65,6 +52,7 @@ bool Position::sameRank(Position pos) const
 
 int Position::index() const
 {
+	// Rank is row and file is column
 	return (MAX_RANK - _rank) * BOARD_SIZE + (_file - MIN_FILE);
 }
 
