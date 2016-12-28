@@ -32,7 +32,7 @@ typedef struct EnPassantDetails
 typedef struct Move
 {
 	Unit* moved;
-	Position dest;
+	Position source;
 	Unit* taken;
 } Move;
 

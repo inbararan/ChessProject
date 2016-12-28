@@ -44,7 +44,7 @@ bool Game::isClear(vector<Position> path)
 
 void Game::regret(Move move)
 {
-	move.moved->move(move.dest);
+	move.moved->move(move.source);
 	getPlayer(OPPONENT).insertUnit(move.taken);
 }
 
@@ -87,7 +87,7 @@ string Game::nextMove(string moveRepr)
 		vector<Position> path = unit->pathToPosition(dst, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(PLAYER).getDirection());
 		if (isClear(path))
 		{
-			Move move = { unit, Position(dst), getPlayer(OPPONENT).getUnit(dst) };
+			Move move = { unit, unit->getPos(), getPlayer(OPPONENT).getUnit(dst) };
 			unit->move(dst);
 			getPlayer(OPPONENT).takeUnit(move.taken);
 			if (!isCheckTo(PLAYER))

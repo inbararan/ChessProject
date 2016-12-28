@@ -11,7 +11,6 @@ public:
 	// All overrides inherited methods from Unit:
 	virtual vector<Position> pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const; // Throws exception if dest unreachable
 
-	virtual bool longCastlingAvaliable() const; // Returns false only if long castling Rook and moved
-	virtual bool shortCastlingAvaliable() const; // Returns false only if short castling Rook and moved
+	virtual bool castlingAvaliable(CastlingType castlingType) const; // Autmatically returns true if not King or matching Rook
 	virtual void commitCastling(CastlingType castlingType) const; // Does anything only if castlingType fits _castlingAvaliablity
 };

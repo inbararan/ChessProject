@@ -66,6 +66,7 @@ vector<Unit*> Player::vitalUnits() const
 
 Unit* Player::getUnit(Position pos) const
 {
+	cout << "Getting unit in " << pos.getFile() << pos.getRank() << endl;
 	for (Unit* unit: _set)
 	{
 		if (unit->getPos() == pos)
@@ -78,7 +79,11 @@ Unit* Player::getUnit(Position pos) const
 
 void Player::takeUnit(Unit* unit)
 {
+	if (unit)
+		cout << "Taking unit: " << unit->getPos().getFile() << unit->getPos().getFile() << endl;
+	cout << "Before: " << _set.size() << endl;
 	_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
+	cout << "After:  " << _set.size() << endl << endl;
 }
 
 void Player::insertUnit(Unit* unit)
