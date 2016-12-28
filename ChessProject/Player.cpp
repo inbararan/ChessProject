@@ -78,10 +78,7 @@ Unit* Player::getUnit(Position pos) const
 
 void Player::takeUnit(Unit* unit)
 {
-	if (unit != nullptr)
-	{
-		_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
-	}
+	_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
 }
 
 void Player::insertUnit(Unit* unit)

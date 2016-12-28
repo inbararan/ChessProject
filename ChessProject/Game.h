@@ -49,7 +49,7 @@ private:
 	bool isCheckTo(bool playerIndicator);
 	bool isCheckmateTo(bool playerIndicator);
 
-	bool isClean(vector<Position> path);
+	bool isClear(vector<Position> path);
 
 	void regret(Move move);
 public:

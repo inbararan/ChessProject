@@ -7,8 +7,6 @@ Player& Game::getPlayer(bool playerIndicator)
 
 bool Game::isCheckTo(bool playerIndicator)
 {
-	// For every player's vital unit, check if in danger:
-	// For every opponent units, check if path to vital unit existing and clean
 	vector<Unit*> vitals = getPlayer(playerIndicator).vitalUnits();
 	vector<Unit*> opponentUnits = getPlayer(!playerIndicator).getSet();
 	for (Unit* vital : vitals)
@@ -17,8 +15,10 @@ bool Game::isCheckTo(bool playerIndicator)
 		{
 			try
 			{
-				if (isClean(opponentUnit->pathToPosition(vital->getPos(), true, getPlayer(OPPONENT).getDirection())))
+				if (isClear(opponentUnit->pathToPosition(vital->getPos(), true, getPlayer(OPPONENT).getDirection())))
 				{
+					cout << "vital: " << vital->getPos().getFile() << vital->getPos().getRank() << endl;
+					cout << "opponentUnit: " << opponentUnit->getPos().getFile() << opponentUnit->getPos().getRank() << endl << endl;
 					return true;
 				}
 			}
@@ -37,7 +37,7 @@ bool Game::isCheckmateTo(bool playerIndicator)
 	return false;
 }
 
-bool Game::isClean(vector<Position> path)
+bool Game::isClear(vector<Position> path)
 {
 	return !getPlayer(PLAYER).hasUnitsIn(path) && !getPlayer(OPPONENT).hasUnitsIn(path);
 }
@@ -85,12 +85,12 @@ string Game::nextMove(string moveRepr)
 		}
 		// Check if src can move to dst
 		vector<Position> path = unit->pathToPosition(dst, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(PLAYER).getDirection());
-		if (isClean(path))
+		if (isClear(path))
 		{
 			Move move = { unit, Position(dst), getPlayer(OPPONENT).getUnit(dst) };
 			unit->move(dst);
 			getPlayer(OPPONENT).takeUnit(move.taken);
-			/*if (isCheckTo(PLAYER))
+			if (!isCheckTo(PLAYER))
 			{
 				delete move.taken;
 			}
@@ -98,7 +98,7 @@ string Game::nextMove(string moveRepr)
 			{
 				regret(move);
 				return MOVE_CAUSES_SELF_CHECK;
-			}*/
+			}
 		}
 		else
 		{
