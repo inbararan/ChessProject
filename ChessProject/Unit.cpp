@@ -16,42 +16,6 @@ void Unit::move(Position dest)
 	_moved = true;
 }
 
-bool Unit::dangeringOneOf(vector<Position> positions, Direction playerDirection)
-{
-	bool dangering = false;
-	for (int i = 0; i < positions.size() && !dangering; i++)
-	{
-		try
-		{
-			pathToPosition(positions[i], true, playerDirection);
-			dangering = true;
-		}
-		catch (UnreachablePositionException e)
-		{
-			// positions[i] is not takeable by *this
-		}
-	}
-	return dangering;
-}
-
-bool Unit::dangeringOneOf(vector<Unit*> units, Direction playerDirection)
-{
-	bool dangering = false;
-	for (int i = 0; i < units.size() && !dangering; i++)
-	{
-		try
-		{
-			pathToPosition(units[i]->getPos(), true, playerDirection);
-			dangering = true;
-		}
-		catch (UnreachablePositionException e)
-		{
-			// units[i] is not takeable by *this
-		}
-	}
-	return dangering;
-}
-
 char Unit::repr(bool toUpper) const
 {
 	return toUpper ? toupper(repr()) : tolower(repr());

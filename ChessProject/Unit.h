@@ -23,8 +23,6 @@ public:
 	virtual char repr(bool toUpper) const; // Actually `static` - indpendent of instance properties
 	virtual vector<Position> pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const = 0; // Throws exception if dest unreachable
 	virtual void move(Position dest); // No validation, just moves.
-	virtual bool dangeringOneOf(vector<Position> positions, Direction playerDirection);
-	virtual bool dangeringOneOf(vector<Unit*> units, Direction playerDirection);
 
 	virtual bool enPassantOption(Position dest) const; // True on Pawn only if dest is in two squares from pos. Assuming valid move
 	virtual bool canCommitEnPassant() const; // True on Pawn only

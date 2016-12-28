@@ -20,14 +20,13 @@ public:
 	~Player();
 
 	Direction getDirection() const;
+	vector<Unit*> getSet() const;
 
 	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
-	bool isDangeringOneOf(vector<Position> positions) const; // Use in castling
-	bool isDangeringOneOf(vector<Unit*> units) const; // Use in check
 	vector<Unit*> vitalUnits() const;
 	Unit* getUnit(Position pos) const;
-	void takeUnit(Position pos);
 	void takeUnit(Unit* unit);
+	void insertUnit(Unit* unit);
 	void affect(string& board, bool toUpper) const;
 	
 	CastlingType avaliableCastling(Position dest) const; // Extracts from King the avaliable castling type

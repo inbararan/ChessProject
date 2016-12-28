@@ -9,6 +9,9 @@ using namespace std;
 #define WHITE true
 #define BLACK false
 
+#define PLAYER (_currentPlayerIndicator)
+#define OPPONENT (!_currentPlayerIndicator)
+
 #define OK "0"
 #define CHECK "1"
 #define SRC_NOT_OCUUPIED "2"
@@ -26,6 +29,13 @@ typedef struct EnPassantDetails
 	bool isSet;
 } EnPassantDetails;
 
+typedef struct Move
+{
+	Unit* moved;
+	Position dest;
+	Unit* taken;
+} Move;
+
 class Game
 {
 private:
@@ -35,10 +45,13 @@ private:
 	EnPassantDetails _enPassantDetails;
 
 	Player& getPlayer(bool playerIndicator);
-	Player& currentPlayer();
-	Player& currentOpponent();
+	
 	bool isCheckTo(bool playerIndicator);
 	bool isCheckmateTo(bool playerIndicator);
+
+	bool isClean(vector<Position> path);
+
+	void regret(Move move);
 public:
 	Game();
 	Game(const Game& other);

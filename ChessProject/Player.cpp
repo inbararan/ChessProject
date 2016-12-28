@@ -23,9 +23,9 @@ Player::Player(const Player& other)
 */
 Player::~Player()
 {
-	for (int i = 0; i < _set.size(); i++)
+	for (Unit* unit: _set)
 	{
-		delete _set[i];
+		delete unit;
 	}
 }
 
@@ -34,54 +34,31 @@ Direction Player::getDirection() const
 	return _direction;
 }
 
+vector<Unit*> Player::getSet() const
+{
+	return _set;
+}
+
 bool Player::hasUnitsIn(vector<Position> positions) const
 {
-	vector<Unit*> units = vector<Unit*>();
-	for (int i = 0; i < positions.size(); i++)
+	for (Position pos: positions)
 	{
-		Unit* unit = getUnit(positions[i]);
-		if (unit != nullptr)
+		if (getUnit(pos) != nullptr)
 		{
-			units.push_back(unit);
+			return true;
 		}
 	}
-	return !units.empty();
-}
-
-bool Player::isDangeringOneOf(vector<Position> positions) const
-{
-	vector<Unit*> units = vector<Unit*>();
-	for (int i = 0; i < _set.size(); i++)
-	{
-		if (_set[i]->dangeringOneOf(positions, _direction))
-		{
-			units.push_back(_set[i]);
-		}
-	}
-	return !units.empty();
-}
-
-bool Player::isDangeringOneOf(vector<Unit*> units) const
-{
-	vector<Unit*> dangeringUnits = vector<Unit*>();
-	for (int i = 0; i < _set.size(); i++)
-	{
-		if (_set[i]->dangeringOneOf(units, _direction))
-		{
-			dangeringUnits.push_back(_set[i]);
-		}
-	}
-	return !dangeringUnits.empty();
+	return false;
 }
 
 vector<Unit*> Player::vitalUnits() const
 {
 	vector<Unit*> units = vector<Unit*>();
-	for (int i = 0; i < _set.size(); i++)
+	for (Unit* unit: _set)
 	{
-		if (_set[i]->vital())
+		if (unit->vital())
 		{
-			units.push_back(_set[i]);
+			units.push_back(unit);
 		}
 	}
 	return units;
@@ -89,22 +66,14 @@ vector<Unit*> Player::vitalUnits() const
 
 Unit* Player::getUnit(Position pos) const
 {
-	Unit* unit = nullptr;
-	cout << "pos:" << pos.getFile() << pos.getRank() << endl;
-	for (int i = 0; i < _set.size() && unit == nullptr; i++)
+	for (Unit* unit: _set)
 	{
-		cout << i << ":" << _set[i]->getPos().getFile() << _set[i]->getPos().getRank() << endl;
-		if (_set[i]->getPos() == pos)
+		if (unit->getPos() == pos)
 		{
-			unit = _set[i];
+			return unit;
 		}
 	}
-	return unit;
-}
-
-void Player::takeUnit(Position pos)
-{
-	takeUnit(getUnit(pos));
+	return nullptr;
 }
 
 void Player::takeUnit(Unit* unit)
@@ -115,41 +84,48 @@ void Player::takeUnit(Unit* unit)
 	}
 }
 
+void Player::insertUnit(Unit* unit)
+{
+	_set.push_back(unit);
+}
+
 void Player::affect(string& board, bool toUpper) const
 {
-	for (int i = 0; i < _set.size(); i++)
+	for (Unit* unit: _set)
 	{
-		board[_set[i]->getPos().index()] = _set[i]->repr(toUpper);
+		board[unit->getPos().index()] = unit->repr(toUpper);
 	}
 }
 
 CastlingType Player::avaliableCastling(Position dest) const
 {
-	CastlingType avaliable = None;
-	for (int i = 0; i < _set.size() && avaliable == None; i++)
+	for (Unit* unit : _set)
 	{
-		avaliable = _set[i]->avaliableCastling(dest);
+		CastlingType avaliable = unit->avaliableCastling(dest);
+		if (avaliable != None)
+		{
+			return avaliable;
+		}
 	}
-	return avaliable;
+	return None;
 }
 
 bool Player::castlingAvaliable(CastlingType castlingType) const
 {
-	bool avaliable = true;
-	for (int i = 0; i < _set.size() && avaliable; i++)
+	for (Unit* unit : _set)
 	{
-		if (!_set[i]->castlingAvaliable(castlingType))
+		if (!unit->castlingAvaliable(castlingType))
 		{
-			avaliable = false;
+			return false;
 		}
 	}
-	return avaliable;
+	return true;
 }
 
 void Player::commitCastling(CastlingType castlingType)
 {
-	for (int i = 0; i < _set.size(); i++)
+	for (Unit* unit : _set)
 	{
-		_set[i]->commitCastling(castlingType);
+		unit->commitCastling(castlingType);
 	}
 }
