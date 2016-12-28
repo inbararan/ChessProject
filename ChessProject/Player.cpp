@@ -88,7 +88,10 @@ void Player::takeUnit(Unit* unit)
 
 void Player::insertUnit(Unit* unit)
 {
-	_set.push_back(unit);
+	if (unit != nullptr)
+	{
+		_set.push_back(unit);
+	}
 }
 
 void Player::affect(string& board, bool toUpper) const

@@ -92,7 +92,10 @@ string Game::nextMove(string moveRepr)
 			getPlayer(OPPONENT).takeUnit(move.taken);
 			if (!isCheckTo(PLAYER))
 			{
-				delete move.taken;
+				if (move.taken)
+				{
+					delete move.taken;
+				}
 			}
 			else
 			{
