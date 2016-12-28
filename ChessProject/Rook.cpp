@@ -23,17 +23,8 @@ vector<Position> Rook::pathToPosition(Position dest, bool enemyThere, Direction 
 
 bool Rook::castlingAvaliable(CastlingType castlingType) const
 {
-	return longCastlingAvaliable() || shortCastlingAvaliable();
-}
-// Returns false only if long castling Rook and moved
-bool Rook::longCastlingAvaliable() const
-{
-	return (this->_castlingAvaliablity == Long) && !_moved;
-}
-// Returns false only if short castling Rook and moved
-bool Rook::shortCastlingAvaliable() const
-{
-	return (this->_castlingAvaliablity == Short) && !_moved;
+	return (_castlingAvaliablity == castlingType) && !_moved;
+	
 }
 // Does anything only if castlingType fits _castlingAvaliablity
 void Rook::commitCastling(CastlingType castlingType) const
