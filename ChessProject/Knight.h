@@ -4,6 +4,7 @@ class Knight : public Unit
 {
 private:
 	virtual char repr() const; // Actually `static` - indpendent of instance properties
+	bool isReachable(Position dest) const;
 public:
 	Knight(Position pos);
 
