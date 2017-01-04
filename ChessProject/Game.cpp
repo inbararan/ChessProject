@@ -40,7 +40,7 @@ bool Game::isCheckmateTo(bool playerIndicator)
 bool Game::isClear(vector<Position> path)
 {
 	// Checks if path is open and no unit (player's or opponent's) is in it
-	return !getPlayer(PLAYER).hasUnitsIn(path) && !getPlayer(OPPONENT).hasUnitsIn(path);
+	return !getPlayer(CURRENT).hasUnitsIn(path) && !getPlayer(OPPONENT).hasUnitsIn(path);
 }
 
 void Game::regret(Move move)
@@ -62,8 +62,11 @@ Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Playe
 	_enPassantDetails = other._enPassantDetails;
 }
 */
-string Game::nextMove(string moveRepr)
+string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 {
+	// Zero report
+	moveReport.promotionAvaliable = false;
+	moveReport.needsReopen = false;
 	try
 	{
 		// First, parse moveRepr
@@ -75,18 +78,18 @@ string Game::nextMove(string moveRepr)
 			return DST_EQL_SRC;
 		}
 		// Find source Unit
-		Unit* unit = getPlayer(PLAYER).getUnit(src);
+		Unit* unit = getPlayer(CURRENT).getUnit(src);
 		// Check src and dst
 		if (unit == nullptr) // Current player has no units in src
 		{
 			return SRC_NOT_OCUUPIED;
 		}
-		if (getPlayer(PLAYER).getUnit(dst) != nullptr)
+		if (getPlayer(CURRENT).getUnit(dst) != nullptr) // Current player ha a unit in dst
 		{
 			return DST_OCCUPIED;
 		}
 		// Check if src can move to dst
-		vector<Position> path = unit->pathToPosition(dst, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(PLAYER).getDirection());
+		vector<Position> path = unit->pathToPosition(dst, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(CURRENT).getDirection());
 		if (isClear(path))
 		{
 			// Save move for the opportunity to regret
@@ -95,40 +98,46 @@ string Game::nextMove(string moveRepr)
 			unit->move(dst);
 			getPlayer(OPPONENT).takeUnit(move.taken);
 			// If move causes check on current player its illegal
-			if (!isCheckTo(PLAYER))
+			if (!isCheckTo(CURRENT)) // Legal move!
 			{
-				// Delete taken unit (if unit was taken at all)
+				// Delete taken unit (if any unit was taken)
 				if (move.taken)
 				{
 					delete move.taken;
 				}
+				// Set the move report
+				moveReport.moved = unit;
+				if (unit->promotionAvaliable(getPlayer(CURRENT).getDirection()))
+				{
+					moveReport.promotionAvaliable = true;
+					moveReport.needsReopen = true;
+				}
+				// Save status before changing current player
+				string status = isCheckTo(OPPONENT) ? CHECK : OK;
+				// Change player
+				_currentPlayerIndicator = !_currentPlayerIndicator;
+				// Return saved status
+				return status;
 			}
-			else
+			else // Move caused check to current player
 			{
-				// If move causes check, regret the move and inform frontend
 				regret(move);
 				return MOVE_CAUSES_SELF_CHECK;
 			}
 		}
-		else
+		else // Path is not clear
 		{
-			return ILLEGAL_MOVEMENT; // ?
+			return ILLEGAL_MOVEMENT;
 		}
 	}
-	catch (OutOfBoardException e)
+	catch (OutOfBoardException e) // Src or dst are not valid positions
 	{
 		return OUT_OF_BOARD;
 	}
-	catch (UnreachablePositionException e)
+	catch (UnreachablePositionException e) // Move isn't commitable by unit
 	{
 		return ILLEGAL_MOVEMENT;
 	}
-	// Save status before changing current player
-	string status = isCheckTo(OPPONENT) ? CHECK : OK;
-	// Change player (if reached this line the move was legal
-	_currentPlayerIndicator = !_currentPlayerIndicator;
-	// Return saved status
-	return status;
 }
 
 string Game::getBoardRepr() const
@@ -143,4 +152,30 @@ string Game::getBoardRepr() const
 	repr += _currentPlayerIndicator ? '0' : '1';
 	// Return full board representation
 	return repr;
+}
+
+bool Game::promote(Unit* unit, char optionRepr)
+{
+	Player& currentPlayer = getPlayer(CURRENT);
+	Unit* newUnit = nullptr;
+	switch (optionRepr)
+	{
+	case 'q':
+		newUnit = new Queen(unit->getPos());
+		break;
+	case 'r':
+		newUnit = new Rook(unit->getPos(), None);
+		break;
+	case 'b':
+		newUnit = new Bishop(unit->getPos());
+		break;
+	case 'n':
+		newUnit = new Knight(unit->getPos());
+		break;
+	default:
+		return false;
+	}
+	currentPlayer.takeUnit(unit);
+	currentPlayer.insertUnit(newUnit);
+	return true;
 }

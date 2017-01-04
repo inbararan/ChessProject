@@ -31,7 +31,7 @@ bool Unit::canCommitEnPassant() const
 	return false;
 }
 
-bool Unit::promotionAvaliable(int promotionRank) const
+bool Unit::promotionAvaliable(Direction playerDirection) const
 {
 	return false;
 }

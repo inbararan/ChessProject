@@ -6,7 +6,11 @@
 #include "Unit.h"
 #include "Queen.h"
 #include "King.h"
+#include "Queen.h"
 #include "Rook.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Pawn.h"
 
 using namespace std;
 

@@ -10,6 +10,7 @@ void main()
 
 	system("start chessGraphics.exe");
 	Sleep(1000);
+
 	Pipe p;
 	bool isConnect = p.connect();
 	
@@ -52,8 +53,24 @@ void main()
 		// according the protocol. Ex: e2e4           (move e2 to e4)
 
 		cout << "Recieved from graphics: " << msgFromGraphics << endl;
+		MoveDetails report = { 0 };
+		strcpy_s(msgToGraphics, game.nextMove(msgFromGraphics, report).c_str()); // msgToGraphics should contain the result of the operation
 
-		strcpy_s(msgToGraphics, game.nextMove(msgFromGraphics).c_str()); // msgToGraphics should contain the result of the operation
+		if (report.promotionAvaliable) // Promotion is avaliable for user
+		{
+			char choice = ' ';
+			cout << "STOP!" << endl << "You can promote last moved unit!" << endl;
+			do
+			{
+				cout << "Insert desired unit (q/r/b/n) : ";
+				cin >> choice;
+			}
+			while (game.promote(report.moved, choice));
+		}
+		if (report.needsReopen)
+		{
+
+		}
 
 		cout << "Sending to graphics: " << msgToGraphics << endl;
 

@@ -1,6 +1,6 @@
 #include "Unit.h"
 
-class Bishop : Unit
+class Bishop : public Unit
 {
 private:
 	virtual char repr() const; // Actually `static` - indpendent of instance properties

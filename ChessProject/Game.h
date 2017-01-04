@@ -9,7 +9,7 @@ using namespace std;
 #define WHITE true
 #define BLACK false
 
-#define PLAYER (_currentPlayerIndicator)
+#define CURRENT (_currentPlayerIndicator)
 #define OPPONENT (!_currentPlayerIndicator)
 
 #define OK "0"
@@ -36,6 +36,13 @@ typedef struct Move
 	Unit* taken;
 } Move;
 
+typedef struct MoveDetails
+{
+	Unit* moved;				// Last unit moved
+	bool promotionAvaliable;	// Is promotion avaliable for unit
+	bool needsReopen;			// In cases of promotion, castling or en passant the frontend shoud reopen
+} MoveDetails;
+
 class Game
 {
 private:
@@ -56,6 +63,7 @@ public:
 	Game();
 	Game(const Game& other);
 
-	string nextMove(string moveRepr); // Returns code
+	string nextMove(string moveRepr, MoveDetails& moveReport); // Returns code
 	string getBoardRepr() const;
+	bool promote(Unit* unit, char optionRepr); // Assuming promotion avaliable. Return value depends on optionRepr validity
 };
