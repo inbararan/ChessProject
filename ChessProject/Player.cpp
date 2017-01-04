@@ -23,6 +23,7 @@ Player::Player(const Player& other)
 */
 Player::~Player()
 {
+	// Delete all units
 	for (Unit* unit: _set)
 	{
 		delete unit;
@@ -41,6 +42,7 @@ vector<Unit*> Player::getSet() const
 
 bool Player::hasUnitsIn(vector<Position> positions) const
 {
+	// Check for every position if it is the position of one of player's units
 	for (Position pos: positions)
 	{
 		if (getUnit(pos) != nullptr)
@@ -48,12 +50,14 @@ bool Player::hasUnitsIn(vector<Position> positions) const
 			return true;
 		}
 	}
+	// If no such position found, return false
 	return false;
 }
 
 vector<Unit*> Player::vitalUnits() const
 {
 	vector<Unit*> units = vector<Unit*>();
+	// Collect units that are vital from _set
 	for (Unit* unit: _set)
 	{
 		if (unit->vital())
@@ -61,12 +65,13 @@ vector<Unit*> Player::vitalUnits() const
 			units.push_back(unit);
 		}
 	}
+	// Return collected units
 	return units;
 }
 
 Unit* Player::getUnit(Position pos) const
 {
-	cout << "Getting unit in " << pos.getFile() << pos.getRank() << endl;
+	// Find unit in _set that has position equal to pos
 	for (Unit* unit: _set)
 	{
 		if (unit->getPos() == pos)
@@ -74,21 +79,19 @@ Unit* Player::getUnit(Position pos) const
 			return unit;
 		}
 	}
+	// If no unit was found return nullptr
 	return nullptr;
 }
 
 void Player::takeUnit(Unit* unit)
 {
-	if (unit)
-		cout << "Taking unit: " << unit->getPos().getFile() << unit->getPos().getFile() << endl;
-	cout << "Before: " << _set.size() << endl;
+	// Remove unit from set
 	_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
-	cout << "After:  " << _set.size() << endl << endl;
 }
 
 void Player::insertUnit(Unit* unit)
 {
-	if (unit != nullptr)
+	if (unit != nullptr) // We don't want nullptrs in _set, do we?
 	{
 		_set.push_back(unit);
 	}
@@ -96,39 +99,49 @@ void Player::insertUnit(Unit* unit)
 
 void Player::affect(string& board, bool toUpper) const
 {
+	// Mark player's units in board, uppercased if needed
 	for (Unit* unit: _set)
 	{
+		// In appropriate index in board, set unit's repr, uppercased if needed
 		board[unit->getPos().index()] = unit->repr(toUpper);
 	}
 }
 
 CastlingType Player::avaliableCastling(Position dest) const
 {
+	// Iterate over all units
 	for (Unit* unit : _set)
 	{
+		// All units but King returns None because they have nothing to do with castling (Castling is a King move)
 		CastlingType avaliable = unit->avaliableCastling(dest);
 		if (avaliable != None)
 		{
+			// King returns castling type according to dest
 			return avaliable;
 		}
 	}
+	// If even the King returned None it means the move isn't castling so return None
 	return None;
 }
 
 bool Player::castlingAvaliable(CastlingType castlingType) const
 {
+	// Ask all units if castling is avaliable
 	for (Unit* unit : _set)
 	{
+		// If one refuses than castling isn't avaliable
 		if (!unit->castlingAvaliable(castlingType))
 		{
 			return false;
 		}
 	}
+	// If all units agree that castling is avaliable (not even one refused) - it's avaliable
 	return true;
 }
 
 void Player::commitCastling(CastlingType castlingType)
 {
+	// Tell all the units to commit castling (Most won't do anything about it)
 	for (Unit* unit : _set)
 	{
 		unit->commitCastling(castlingType);

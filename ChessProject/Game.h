@@ -17,7 +17,7 @@ using namespace std;
 #define SRC_NOT_OCUUPIED "2"
 #define DST_OCCUPIED "3"
 #define MOVE_CAUSES_SELF_CHECK "4"
-#define OUT_OF_BORDER "5"
+#define OUT_OF_BOARD "5"
 #define ILLEGAL_MOVEMENT "6"
 #define DST_EQL_SRC "7"
 #define CHEKMATE "8"

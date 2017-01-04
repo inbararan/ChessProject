@@ -39,11 +39,13 @@ bool Game::isCheckmateTo(bool playerIndicator)
 
 bool Game::isClear(vector<Position> path)
 {
+	// Checks if path is open and no unit (player's or opponent's) is in it
 	return !getPlayer(PLAYER).hasUnitsIn(path) && !getPlayer(OPPONENT).hasUnitsIn(path);
 }
 
 void Game::regret(Move move)
 {
+	// Reverses move's affection over game status
 	move.moved->move(move.source);
 	getPlayer(OPPONENT).insertUnit(move.taken);
 }
@@ -87,11 +89,15 @@ string Game::nextMove(string moveRepr)
 		vector<Position> path = unit->pathToPosition(dst, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(PLAYER).getDirection());
 		if (isClear(path))
 		{
+			// Save move for the opportunity to regret
 			Move move = { unit, unit->getPos(), getPlayer(OPPONENT).getUnit(dst) };
+			// Commit move
 			unit->move(dst);
 			getPlayer(OPPONENT).takeUnit(move.taken);
+			// If move causes check on current player its illegal
 			if (!isCheckTo(PLAYER))
 			{
+				// Delete taken unit (if unit was taken at all)
 				if (move.taken)
 				{
 					delete move.taken;
@@ -99,6 +105,7 @@ string Game::nextMove(string moveRepr)
 			}
 			else
 			{
+				// If move causes check, regret the move and inform frontend
 				regret(move);
 				return MOVE_CAUSES_SELF_CHECK;
 			}
@@ -110,23 +117,30 @@ string Game::nextMove(string moveRepr)
 	}
 	catch (OutOfBoardException e)
 	{
-		return OUT_OF_BORDER;
+		return OUT_OF_BOARD;
 	}
 	catch (UnreachablePositionException e)
 	{
 		return ILLEGAL_MOVEMENT;
 	}
+	// Save status before changing current player
 	string status = isCheckTo(OPPONENT) ? CHECK : OK;
+	// Change player (if reached this line the move was legal
 	_currentPlayerIndicator = !_currentPlayerIndicator;
+	// Return saved status
 	return status;
 }
 
 string Game::getBoardRepr() const
 {
+	// Generate empty board
 	string repr = "";
 	repr.assign(64, '#');
+	// Put both sets on the board
 	_player1.affect(repr, true); // White
 	_player2.affect(repr, false); // Black
+	// Add player indicator
 	repr += _currentPlayerIndicator ? '0' : '1';
+	// Return full board representation
 	return repr;
 }
