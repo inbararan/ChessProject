@@ -20,7 +20,7 @@ using namespace std;
 #define OUT_OF_BOARD "5"
 #define ILLEGAL_MOVEMENT "6"
 #define DST_EQL_SRC "7"
-#define CHEKMATE "8"
+#define CHECKMATE "8"
 
 typedef struct EnPassantDetails
 {
@@ -53,12 +53,15 @@ private:
 
 	Player& getPlayer(bool playerIndicator);
 	
+	Move commitMove(Unit* toMove, Position dest, Player& opponent); // Commits move and return moev data for later use
+
 	bool isCheckTo(bool playerIndicator);
-	bool isCheckmateTo(bool playerIndicator);
+	bool isCheckmate(); // To opponent
 
-	bool isClear(vector<Position> path);
+	bool isClear(vector<Position> path);		// Path is clear of any unit
+	bool isReachable(Unit* unit, Position dst);	// Path to dst is reachable by unit and clear
 
-	void regret(Move move);
+	void regret(Move move, Player& opponent);
 public:
 	Game();
 	Game(const Game& other);

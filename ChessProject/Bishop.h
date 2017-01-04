@@ -1,4 +1,7 @@
+#pragma once
+
 #include "Unit.h"
+#include <algorithm>
 
 class Bishop : public Unit
 {

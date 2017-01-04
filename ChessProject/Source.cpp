@@ -69,7 +69,7 @@ void main()
 		}
 		if (report.needsReopen)
 		{
-
+			cout << "Assume I reopened please" << endl;
 		}
 
 		cout << "Sending to graphics: " << msgToGraphics << endl;

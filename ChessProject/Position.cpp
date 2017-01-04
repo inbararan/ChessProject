@@ -85,3 +85,16 @@ vector<Position> Position::positionsRangeOnRank(int rank, char fileLimit1, char 
 	}
 	return positions;
 }
+
+vector<Position> Position::allPossiblePositions()
+{
+	vector<Position> positions = vector<Position>();
+	for (char f = MIN_FILE; f <= MAX_FILE; f++)
+	{
+		for (int r = MIN_RANK; r <= MAX_RANK; r++)
+		{
+			positions.push_back(Position(f, r));
+		}
+	}
+	return positions;
+}

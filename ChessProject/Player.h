@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "Unit.h"
-#include "Queen.h"
 #include "King.h"
 #include "Queen.h"
 #include "Rook.h"

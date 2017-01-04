@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Unit.h"
 
 class Queen : public Unit

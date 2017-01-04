@@ -1,6 +1,4 @@
-#include "Exceptions.h"
 #include "Bishop.h"
-#include <algorithm>
 
 
 char Bishop::repr() const
@@ -26,32 +24,22 @@ vector<Position> Bishop::pathToPosition(Position dest, bool enemyThere, Directio
 	char minFile,maxFile;
 	int minRank, maxRank;
 
-	if ((dest.getFile() > 'h' || dest.getFile() < 'a') && (dest.getRank() < 1 || dest.getRank() > 8))
+	if (abs(_pos.getFile() - _pos.getRank()) == abs(dest.getFile() - dest.getRank()))
 	{
-		throw OutOfBoardException();
-		return positions;
+		minRank = min(_pos.getRank(), dest.getRank());
+		maxRank = max(_pos.getRank(), dest.getRank());
+
+		minFile = min(_pos.getFile(), dest.getFile());
+		maxFile = max(_pos.getFile(), dest.getFile());
+
+		for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++)
+		{
+			positions.push_back(Position(i, j));
+		}
 	}
 	else
 	{
-		if (abs(_pos.getFile() - _pos.getRank()) == abs(dest.getFile() - dest.getRank()))
-		{
-			minRank = min(_pos.getRank(), dest.getRank());
-			maxRank = max(_pos.getRank(), dest.getRank());
-
-			minFile = min(_pos.getFile(), dest.getFile());
-			maxFile = max(_pos.getFile(), dest.getFile());
-
-			for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++)
-			{
-				Position p(i, j);
-				positions.push_back(p);
-			}
-		}
-		else
-		{
-			throw UnreachablePositionException();
-			return positions;
-		}
+		throw UnreachablePositionException();
 	}
 	return positions;
 }

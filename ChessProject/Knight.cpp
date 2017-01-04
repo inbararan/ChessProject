@@ -25,17 +25,10 @@ vector<Position> Knight::pathToPosition(Position dest, bool enemyThere, Directio
 bool Knight::isReachable(Position dest) const
 {
 	bool ans = false;
-	if (dest.getFile() < 'a ' || dest.getFile() > 'h' || dest.getRank() < 1 || dest.getRank() > 8)
-	{
-		ans = false;
-	}
-	else
-	{
-		if ((abs(dest.getFile() - _pos.getFile()) == 1 && abs(dest.getRank() - _pos.getRank()) == 2)
+	if ((abs(dest.getFile() - _pos.getFile()) == 1 && abs(dest.getRank() - _pos.getRank()) == 2)
 			|| (abs(dest.getFile() - _pos.getFile()) == 2 && abs(dest.getRank() - _pos.getRank()) == 1))
-		{
-			ans = true;
-		}
+	{
+		ans = true;
 	}
 	return ans;
 }

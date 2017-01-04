@@ -32,6 +32,7 @@ public:
 	
 	char getFile() const;
 	int getRank() const;
+	string getRepr () const { string repr = ""; repr += _file; repr += _rank + '0'; return repr; };
 
 	bool sameFile(Position pos) const;
 	bool sameRank(Position pos) const;
@@ -42,4 +43,5 @@ public:
 
 	static vector<Position> positionsRangeOnFile(char file, int minRank, int maxRank);
 	static vector<Position> positionsRangeOnRank(int rank, char minFile, char maxFile);
+	static vector<Position> allPossiblePositions(); // All possible positions on board
 };
