@@ -23,7 +23,6 @@ Bishop::~Bishop()
 vector<Position> Bishop::pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const
 {
 	vector<Position> positions;
-	Position p(0,0);
 	char minFile,maxFile;
 	int minRank, maxRank;
 
@@ -44,7 +43,8 @@ vector<Position> Bishop::pathToPosition(Position dest, bool enemyThere, Directio
 
 			for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++)
 			{
-
+				Position p(i, j);
+				positions.push_back(p);
 			}
 		}
 		else
@@ -53,5 +53,6 @@ vector<Position> Bishop::pathToPosition(Position dest, bool enemyThere, Directio
 			return positions;
 		}
 	}
+	return positions;
 }
 
