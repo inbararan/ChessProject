@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Unit.h"
+#include <algorithm>
 
 class Rook : public Unit
 {

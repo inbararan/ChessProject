@@ -1,7 +1,4 @@
 #include "Rook.h"
-#include "Position.h"
-#include <iostream>
-#include <algorithm>
 
 char Rook::repr() const
 {
