@@ -58,7 +58,7 @@ private:
 	bool isCheckTo(bool playerIndicator);
 	bool isCheckmate(); // To opponent
 
-	bool isCastlingAvaliable(CastlingType castlingType);
+	bool isCastlingAvaliable(const vector<Position>& path, CastlingType castlingType);
 	void commitCastling(CastlingType castlingType);
 
 	bool isClear(vector<Position> path);		// Path is clear of any unit

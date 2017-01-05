@@ -39,18 +39,24 @@ bool Game::isCheckTo(bool playerIndicator)
 
 bool Game::isCheckmate()
 {
-	Player& current = getPlayer(CURRENT);
-	Player& opponent = getPlayer(OPPONENT);
-	for (Unit* optionalSaver : opponent.getSet())
+	for (Unit* optionalSaver : getPlayer(OPPONENT).getSet())
 	{
 		for (Position pos : Position::allPossiblePositions())
 		{
-			vector<Position> path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr, getPlayer(OPPONENT).getDirection());
+			vector<Position> path = vector<Position>();
+			try
+			{
+				path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr, getPlayer(OPPONENT).getDirection());
+			}
+			catch (UnreachablePositionException e)
+			{
+				// pos unreachable by optionalSaver
+			}
 			if (isClear(path))
 			{
-				Move move = commitMove(optionalSaver, pos, current);
+				Move move = commitMove(optionalSaver, pos, getPlayer(CURRENT));
 				bool check = isCheckTo(OPPONENT);
-				regret(move, current);
+				regret(move, getPlayer(CURRENT));
 				if (!check)
 				{
 					return false;
@@ -61,7 +67,7 @@ bool Game::isCheckmate()
 	return true;
 }
 
-bool Game::isCastlingAvaliable(CastlingType castlingType)
+bool Game::isCastlingAvaliable(const vector<Position>& path, CastlingType castlingType)
 {
 	for (Unit* unit : getPlayer(CURRENT).getSet())
 	{
@@ -142,7 +148,7 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 				// Check if move is a castling move and terminate move if such castling not avaliable
 				if (flags.castling != None)
 				{
-					if (isCastlingAvaliable(flags.castling))
+					if (isCastlingAvaliable(path, flags.castling))
 					{
 						commitCastling(flags.castling);
 					}
