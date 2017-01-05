@@ -39,11 +39,18 @@ bool Game::isCheckTo(bool playerIndicator)
 
 bool Game::isCheckmate() // To opponent
 {
+	/*
+	If no opponent unit can do anything that removes the check, it's a checkmate
+	*/
 	for (Unit* optionalSaver : getPlayer(OPPONENT).getSet())
 	{
+		/*
+		Check every possibe move (whole board)
+		*/
 		for (Position pos : Position::allPossiblePositions())
 		{
-			if (getPlayer(OPPONENT).getUnit(pos) == nullptr) // optionalSaver cannot move to a position taken by his own color
+			// optionalSaver cannot move to a position taken by his own color
+			if (getPlayer(OPPONENT).getUnit(pos) == nullptr)
 			{
 				vector<Position> path = vector<Position>();
 				try
@@ -73,6 +80,11 @@ bool Game::isCheckmate() // To opponent
 
 bool Game::isCastlingAvaliable(const vector<Position>& path, CastlingType castlingType)
 {
+	/*
+	If at least one unit returns false for isCastlingAvaliable, 
+	it means the King or relevant Rook moved, 
+	which means castling unavaliable.
+	*/
 	for (Unit* unit : getPlayer(CURRENT).getSet())
 	{
 		if (!unit->isCastlingAvaliable(castlingType))
@@ -119,26 +131,21 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 	moveReport.needsReopen = false;
 	try
 	{
-		// First, parse moveRepr
 		Position src = Position(moveRepr.substr(0, 2));
 		Position dst = Position(moveRepr.substr(2, 2));
-		// Make sure there is an actual MOVEMENT trial
-		if (src == dst)
+		if (src == dst) // There must be a movement
 		{
 			return DST_EQL_SRC;
 		}
-		// Find source Unit
 		Unit* unit = getPlayer(CURRENT).getUnit(src);
-		// Check src and dst
 		if (unit == nullptr) // Current player has no units in src
 		{
 			return SRC_NOT_OCUUPIED;
 		}
-		if (getPlayer(CURRENT).getUnit(dst) != nullptr) // Current player ha a unit in dst
+		if (getPlayer(CURRENT).getUnit(dst) != nullptr) // Current player has a unit in dst
 		{
 			return DST_OCCUPIED;
 		}
-		// Flags
 		MovementFlags flags = { 0 };
 		// Check if src can move to dst
 		vector<Position> path = unit->pathToPosition(dst, flags, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(CURRENT).getDirection());
@@ -161,25 +168,27 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 						return ILLEGAL_MOVEMENT;
 					}
 				}
-				// Check if move caused checkmate
-				if (isCheckmate())
-				{
-					return CHECKMATE;
-				}
-				// Delete taken unit (if any unit was taken)
+				// Remove taken unit to avoid memory leaks
 				if (move.taken)
 				{
 					delete move.taken;
 				}
-				// Set the move report
+				
+				// Main program should be informed about promotion & reopen to habdle such events
 				moveReport.moved = unit;
 				moveReport.promotionAvaliable = flags.promotion;
 				moveReport.needsReopen = flags.promotion || flags.castling != None || flags.enPassant;
-				// Save status before changing current player
-				string status = isCheckTo(OPPONENT) ? CHECK : OK;
-				// Change player
+				// Save status befor current player changes
+				string status = OK;
+				if (isCheckTo(OPPONENT))
+				{
+					status = CHECK;
+				}
+				else if (isCheckmate())
+				{
+					status = CHECKMATE;
+				}
 				_currentPlayerIndicator = !_currentPlayerIndicator;
-				// Return saved status
 				return status;
 			}
 			else // Move caused check to current player
