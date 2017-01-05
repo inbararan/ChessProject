@@ -110,7 +110,7 @@ void Player::affect(string& board, bool toUpper) const
 	}
 }
 
-CastlingType Player::avaliableCastling(Position dest) const
+/*CastlingType Player::avaliableCastling(Position dest) const
 {
 	// Iterate over all units
 	for (Unit* unit : _set)
@@ -150,3 +150,4 @@ void Player::commitCastling(CastlingType castlingType)
 		unit->commitCastling(castlingType);
 	}
 }
+*/
