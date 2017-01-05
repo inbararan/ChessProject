@@ -27,25 +27,44 @@ vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags
 	{
 		if (dest.getFile() == _pos.getFile())
 		{
-			minRank = min(dest.getRank(), _pos.getRank());
-			maxRank = max(dest.getRank(), _pos.getRank());
-
-			for (int i = minRank + 1; i < maxRank; i++)
+			if (dest.getRank() < _pos.getRank())
 			{
-				Position p(_pos.getFile(),i);
-				positions.push_back(p);
+				for (int i = _pos.getRank() - 1; i > dest.getRank(); i--)
+				{
+					Position p(_pos.getFile(), i);
+					positions.push_back(p);
+				}
+			}
+			else
+			{
+				for (int i = _pos.getRank() + 1; i < dest.getRank(); i++)
+				{
+					Position p(_pos.getFile(), i);
+					positions.push_back(p);
+				}
 			}
 		}
 		else // the ranks are equal
 		{
-			minFile = min(dest.getFile(), _pos.getFile());
-			maxFile = max(dest.getFile(), _pos.getFile());
 
-			for (char i = minFile + 1; i < maxFile; i++)
+			if (dest.getFile() <  _pos.getFile())
 			{
-				Position p(i, _pos.getRank());
-				positions.push_back(p);
+				for (char i = _pos.getFile() - 1; i > dest.getFile(); i--)
+				{
+					Position p(i, _pos.getRank());
+					positions.push_back(p);
+				}
 			}
+			else
+			{
+				for (char i = _pos.getFile() + 1; i < dest.getFile(); i--)
+				{
+					Position p(i, _pos.getRank());
+					positions.push_back(p);
+				}
+			}
+
+			
 		}
 	}
 	return positions;

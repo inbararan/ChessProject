@@ -15,11 +15,10 @@ Queen::Queen(const Position& pos) : Unit(pos)
 vector<Position> Queen::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere, Direction playerDirection) const
 {
 	vector<Position> positions;
-	CastlingType ct = None;
 	//is rook move
 	if ((dest.getFile() == _pos.getFile() || dest.getRank() == _pos.getRank()))
 	{
-		Rook* r = new Rook(_pos, ct);
+		Rook* r = new Rook(_pos);
 		positions = r->pathToPosition(dest,flags,enemyThere,playerDirection);
 		delete r;
 	}
