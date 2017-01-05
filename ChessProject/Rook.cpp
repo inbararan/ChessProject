@@ -50,3 +50,4 @@ vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags
 	}
 	return positions;
 }
+
