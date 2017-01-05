@@ -8,9 +8,12 @@ char Rook::repr() const
 	return 'r';
 }
 
-Rook::Rook(const Position& pos, CastlingType castlingAvaliablity) : Unit(pos)
+Rook::Rook(const Position& pos) : Unit(pos), _castlingAvaliablity(None)
 {
-	_castlingAvaliablity = castlingAvaliablity;
+}
+
+Rook::Rook(const Position& pos, CastlingType castlingAvaliablity) : Unit(pos), _castlingAvaliablity(castlingAvaliablity)
+{
 }
 
 // All overrides inherited methods from Unit:
