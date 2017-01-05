@@ -38,7 +38,7 @@ Direction Player::getDirection() const
 	return _direction;
 }
 
-vector<Unit*> Player::getSet() const
+const vector<Unit*>& Player::getSet() const
 {
 	return _set;
 }
@@ -57,7 +57,7 @@ bool Player::hasUnitsIn(vector<Position> positions) const
 	return false;
 }
 
-vector<Unit*> Player::vitalUnits() const
+const vector<Unit*>& Player::vitalUnits() const
 {
 	vector<Unit*> units = vector<Unit*>();
 	// Collect units that are vital from _set

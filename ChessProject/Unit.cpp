@@ -27,6 +27,11 @@ vector<Position> Unit::pathToPosition(const Position& dest, bool enemyThere, Dir
 	return pathToPosition(dest, unnessecaryFlags, enemyThere, playerDirection);
 }
 
+bool Unit::isCastlingAvaliable(CastlingType castlingType) const
+{
+	return true;
+}
+
 bool Unit::canCommitEnPassant() const
 {
 	return false;

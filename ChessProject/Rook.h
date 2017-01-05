@@ -8,6 +8,7 @@ private:
 	CastlingType _castlingAvaliablity;
 	virtual char repr() const; // Actually `static` - indpendent of instance properties
 public:
+	Rook(const Position& pos);
 	Rook(const Position& pos, CastlingType castlingAvaliablity);
 
 	// All overrides inherited methods from Unit:

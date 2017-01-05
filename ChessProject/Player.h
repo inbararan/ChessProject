@@ -24,17 +24,12 @@ public:
 	~Player();
 
 	Direction getDirection() const;
-	vector<Unit*> getSet() const;
+	const vector<Unit*>& getSet() const;
 
 	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
-	vector<Unit*> vitalUnits() const;
+	const vector<Unit*>& vitalUnits() const;
 	Unit* getUnit(Position pos) const;
 	void takeUnit(Unit* unit);
 	void insertUnit(Unit* unit);
 	void affect(string& board, bool toUpper) const;
-	
-	CastlingType avaliableCastling(Position dest) const; // Extracts from King the avaliable castling type
-	bool castlingAvaliable(CastlingType castlingType) const;
-
-	void commitCastling(CastlingType castlingType);
 };
