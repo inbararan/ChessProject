@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Unit.h"
+#include "Exceptions.h"
+#include "Bishop.h"
+#include "Rook.h"
 
 class Queen : public Unit
 {
