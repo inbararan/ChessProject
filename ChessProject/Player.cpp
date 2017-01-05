@@ -39,7 +39,7 @@ Direction Player::getDirection() const
 	return _direction;
 }
 
-const vector<Unit*>& Player::getSet() const
+vector<Unit*> Player::getSet() const
 {
 	return _set;
 }

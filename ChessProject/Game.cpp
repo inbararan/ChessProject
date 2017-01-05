@@ -37,29 +37,33 @@ bool Game::isCheckTo(bool playerIndicator)
 	return false;
 }
 
-bool Game::isCheckmate()
+bool Game::isCheckmate() // To opponent
 {
 	for (Unit* optionalSaver : getPlayer(OPPONENT).getSet())
 	{
 		for (Position pos : Position::allPossiblePositions())
 		{
-			vector<Position> path = vector<Position>();
-			try
+			if (getPlayer(OPPONENT).getUnit(pos) == nullptr) // optionalSaver cannot move to a position taken by his own color
 			{
-				path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr, getPlayer(OPPONENT).getDirection());
-			}
-			catch (UnreachablePositionException e)
-			{
-				// pos unreachable by optionalSaver
-			}
-			if (isClear(path))
-			{
-				Move move = commitMove(optionalSaver, pos, getPlayer(CURRENT));
-				bool check = isCheckTo(OPPONENT);
-				regret(move, getPlayer(CURRENT));
-				if (!check)
+				vector<Position> path = vector<Position>();
+				try
 				{
-					return false;
+					path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr, getPlayer(OPPONENT).getDirection());
+				}
+				catch (UnreachablePositionException e)
+				{
+					// pos unreachable by optionalSaver
+					continue;
+				}
+				if (isClear(path)) // Path must be clear
+				{
+					Move move = commitMove(optionalSaver, pos, getPlayer(OPPONENT));
+					bool check = isCheckTo(OPPONENT);
+					regret(move, getPlayer(OPPONENT));
+					if (!check) // That move removes the check!
+					{
+						return false;
+					}
 				}
 			}
 		}

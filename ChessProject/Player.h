@@ -24,7 +24,7 @@ public:
 	~Player();
 
 	Direction getDirection() const;
-	const vector<Unit*>& getSet() const;
+	vector<Unit*> getSet() const;
 
 	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	vector<Unit*> vitalUnits() const;
