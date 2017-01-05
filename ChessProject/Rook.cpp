@@ -57,7 +57,7 @@ vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags
 			}
 			else
 			{
-				for (char i = _pos.getFile() + 1; i < dest.getFile(); i--)
+				for (char i = _pos.getFile() + 1; i < dest.getFile(); i++)
 				{
 					Position p(i, _pos.getRank());
 					positions.push_back(p);
