@@ -33,14 +33,24 @@ vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& fla
 		}
 		else if (_pos.getRank() < dest.getRank() && _pos.getFile() > dest.getRank())
 		{
+			for (int i = _pos.getRank() + 1, j = _pos.getFile() + 1; i < dest.getRank(), j > dest.getFile(); i++, j--)
+			{
+				positions.push_back(Position(j, i));
+			}
 		}
 		else if (_pos.getRank() > dest.getRank() && _pos.getFile() < _pos.getFile())
 		{
-
+			for (int i = _pos.getRank() + 1, j = _pos.getFile() + 1; i > dest.getRank(), j < dest.getFile(); i--, j++)
+			{
+				positions.push_back(Position(j, i));
+			}
 		}
 		else
 		{
-
+			for (int i = _pos.getRank() + 1, j = _pos.getFile() + 1; i > dest.getRank(), j > dest.getFile(); i--, j--)
+			{
+				positions.push_back(Position(j, i));
+			}
 		}
 
 		
