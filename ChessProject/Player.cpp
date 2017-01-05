@@ -58,7 +58,7 @@ bool Player::hasUnitsIn(vector<Position> positions) const
 	return false;
 }
 
-const vector<Unit*>& Player::vitalUnits() const
+vector<Unit*> Player::vitalUnits() const
 {
 	vector<Unit*> units = vector<Unit*>();
 	// Collect units that are vital from _set

@@ -219,9 +219,9 @@ bool Game::promote(Unit* unit, char optionRepr)
 	Unit* newUnit = nullptr;
 	switch (optionRepr)
 	{
-	//case 'q':
-	//	newUnit = new Queen(unit->getPos());
-	//	break;
+	case 'q':
+		newUnit = new Queen(unit->getPos());
+		break;
 	case 'r':
 		newUnit = new Rook(unit->getPos(), None);
 		break;
