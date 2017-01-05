@@ -1,4 +1,3 @@
-
 #include "Queen.h"
 
 // Actually `static` - indpendent of instance properties
