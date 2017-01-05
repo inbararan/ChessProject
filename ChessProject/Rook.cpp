@@ -14,7 +14,7 @@ Rook::Rook(const Position& pos, CastlingType castlingAvaliablity) : Unit(pos)
 }
 
 // All overrides inherited methods from Unit:
-vector<Position> Rook::pathToPosition(const Position& dest, bool enemyThere, Direction playerDirection) const
+vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere, Direction playerDirection) const
 {
 	int minRank, maxRank;
 	char minFile, maxFile; 
@@ -49,14 +49,4 @@ vector<Position> Rook::pathToPosition(const Position& dest, bool enemyThere, Dir
 		}
 	}
 	return positions;
-}
-
-bool Rook::castlingAvaliable(CastlingType castlingType) const
-{
-	return _castlingAvaliablity == castlingType && !_moved;
-}
-
-void Rook::commitCastling(CastlingType castlingType) const
-{
-
 }

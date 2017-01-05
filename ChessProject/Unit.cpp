@@ -21,6 +21,12 @@ char Unit::repr(bool toUpper) const
 	return toUpper ? toupper(repr()) : tolower(repr());
 }
 
+vector<Position> Unit::pathToPosition(const Position& dest, bool enemyThere, Direction playerDirection) const
+{
+	MovementFlags unnessecaryFlags = { 0 };
+	return pathToPosition(dest, unnessecaryFlags, enemyThere, playerDirection);
+}
+
 bool Unit::canCommitEnPassant() const
 {
 	return false;

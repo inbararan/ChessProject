@@ -109,7 +109,7 @@ void Player::affect(string& board, bool toUpper) const
 		board[unit->getPos().index()] = unit->repr(toUpper);
 	}
 }
-
+/*
 CastlingType Player::avaliableCastling(Position dest) const
 {
 	// Iterate over all units
@@ -150,3 +150,4 @@ void Player::commitCastling(CastlingType castlingType)
 		unit->commitCastling(castlingType);
 	}
 }
+*/
