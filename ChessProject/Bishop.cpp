@@ -32,7 +32,7 @@ vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& fla
 		minFile = min(_pos.getFile(), dest.getFile());
 		maxFile = max(_pos.getFile(), dest.getFile());
 
-		for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++)
+		for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++,j++)
 		{
 			positions.push_back(Position(i, j));
 		}
