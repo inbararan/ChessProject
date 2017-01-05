@@ -58,8 +58,10 @@ private:
 	bool isCheckTo(bool playerIndicator);
 	bool isCheckmate(); // To opponent
 
+	bool isCastlingAvaliable(CastlingType castlingType);
+	void commitCastling(CastlingType castlingType);
+
 	bool isClear(vector<Position> path);		// Path is clear of any unit
-	bool isReachable(Unit* unit, Position dst);	// Path to dst is reachable by unit and clear
 
 	void regret(Move move, Player& opponent);
 public:

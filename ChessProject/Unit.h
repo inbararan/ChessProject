@@ -33,5 +33,6 @@ public:
 	void move(const Position& dest); // No validation, just moves.
 
 	virtual bool canCommitEnPassant() const; // True on Pawn only
+	virtual bool isCastlingAvaliable(CastlingType castlingType) const; // Relevant for King or Rook only
 	virtual bool vital() const; // True for King only
 };

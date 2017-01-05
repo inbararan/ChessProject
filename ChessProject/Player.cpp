@@ -6,9 +6,9 @@ Player::Player(Direction direction)
 	_set = vector<Unit*>();
 	_set.push_back(new Rook(Position('a', 1, direction), Short));
 	_set.push_back(new Knight(Position('b', 1, direction)));
-	//_set.push_back(new Bishop(Position('c', 1, direction)));
+	_set.push_back(new Bishop(Position('c', 1, direction)));
 	_set.push_back(new King(Position('d', 1, direction)));
-	//_set.push_back(new Bishop(Position('f', 1, direction)));
+	_set.push_back(new Bishop(Position('f', 1, direction)));
 	_set.push_back(new Knight(Position('g', 1, direction)));
 	_set.push_back(new Rook(Position('h', 1, direction), Long));
 	_direction = direction;
@@ -38,7 +38,7 @@ Direction Player::getDirection() const
 	return _direction;
 }
 
-vector<Unit*> Player::getSet() const
+const vector<Unit*>& Player::getSet() const
 {
 	return _set;
 }
@@ -57,7 +57,7 @@ bool Player::hasUnitsIn(vector<Position> positions) const
 	return false;
 }
 
-vector<Unit*> Player::vitalUnits() const
+const vector<Unit*>& Player::vitalUnits() const
 {
 	vector<Unit*> units = vector<Unit*>();
 	// Collect units that are vital from _set
