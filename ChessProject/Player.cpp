@@ -109,8 +109,8 @@ void Player::affect(string& board, bool toUpper) const
 		board[unit->getPos().index()] = unit->repr(toUpper);
 	}
 }
-
-/*CastlingType Player::avaliableCastling(Position dest) const
+/*
+CastlingType Player::avaliableCastling(Position dest) const
 {
 	// Iterate over all units
 	for (Unit* unit : _set)

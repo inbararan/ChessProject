@@ -39,14 +39,6 @@ bool Game::isCheckTo(bool playerIndicator)
 {
 	vector<Unit*> vitals = getPlayer(playerIndicator).vitalUnits();
 	vector<Unit*> opponentUnits = getPlayer(!playerIndicator).getSet();
-	//cout << "playerIndicator = " << playerIndicator << endl;
-	//cout << "vitals.size() = " << vitals.size() << endl;
-	//cout << "opponentUnits.size() = " << opponentUnits.size() << endl;
-	//for (Unit* opponentUnit : opponentUnits)
-	//	cout << "Opponent unit in " << opponentUnit->getPos().getFile() << opponentUnit->getPos().getRank() << endl;
-	//for (Unit* friendlyUnit : opponentUnits)
-	//	cout << "Friendly unit in " << friendlyUnit->getPos().getFile() << friendlyUnit->getPos().getRank() << endl;
-	
 	for (Unit* vital : vitals)
 	{
 		for (Unit* opponentUnit : opponentUnits)
@@ -55,8 +47,6 @@ bool Game::isCheckTo(bool playerIndicator)
 			{
 				if (isClear(opponentUnit->pathToPosition(vital->getPos(), true, getPlayer(!playerIndicator).getDirection())))
 				{
-					//cout << "Vital unit in " << vital->getPos().getFile() << vital->getPos().getRank() << endl;
-					//cout << "Opponent unit in " << opponentUnit->getPos().getFile() << opponentUnit->getPos().getRank() << endl;
 					return true;
 				}
 			}
@@ -117,12 +107,6 @@ Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Playe
 */
 string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 {
-	string line = "----------";
-	//for (Unit* u : getPlayer(CURRENT).getSet())
-	//	cout << line << "Current:  " << u->getPos().getFile() << u->getPos().getRank() << endl;
-	//for (Unit* u : getPlayer(OPPONENT).getSet())
-	//	cout << line << "Opponent: " << u->getPos().getFile() << u->getPos().getRank() << endl;
-	// Zero report
 	moveReport.promotionAvaliable = false;
 	moveReport.needsReopen = false;
 	try
@@ -165,11 +149,6 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 				}
 				// Set the move report
 				moveReport.moved = unit;
-				if (unit->promotionAvaliable(getPlayer(CURRENT).getDirection()))
-				{
-					moveReport.promotionAvaliable = true;
-					moveReport.needsReopen = true;
-				}
 				// Save status before changing current player
 				string status = isCheckTo(OPPONENT) ? CHECK : OK;
 				// Change player

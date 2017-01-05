@@ -21,21 +21,29 @@ Bishop::~Bishop()
 vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere, Direction playerDirection) const
 {
 	vector<Position> positions;
-	char minFile,maxFile;
-	int minRank, maxRank;
 
-	if (abs(_pos.getFile() - _pos.getRank()) == abs(dest.getFile() - dest.getRank()))
+	if (abs(_pos.getFile() - dest.getFile()) == abs(_pos.getRank() - dest.getRank()))
 	{
-		minRank = min(_pos.getRank(), dest.getRank());
-		maxRank = max(_pos.getRank(), dest.getRank());
-
-		minFile = min(_pos.getFile(), dest.getFile());
-		maxFile = max(_pos.getFile(), dest.getFile());
-
-		for (int i = minRank,j = minFile; i < maxRank,j < maxFile; i++,j++)
+		if (_pos.getRank() < dest.getRank() && _pos.getFile() < dest.getFile())
 		{
-			positions.push_back(Position(i, j));
+			for (int i = _pos.getRank() + 1, j = _pos.getFile() + 1; i < dest.getRank(), j < dest.getFile(); i++, j++)
+			{
+				positions.push_back(Position(j, i));
+			}
 		}
+		else if (_pos.getRank() < dest.getRank() && _pos.getFile() > dest.getRank())
+		{
+		}
+		else if (_pos.getRank() > dest.getRank() && _pos.getFile() < _pos.getFile())
+		{
+
+		}
+		else
+		{
+
+		}
+
+		
 	}
 	else
 	{
