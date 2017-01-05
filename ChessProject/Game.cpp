@@ -75,18 +75,18 @@ bool Game::isCheckmate()
 	Player& opponent = getPlayer(OPPONENT);
 	for (Unit* optionalSaver : opponent.getSet())
 	{
-		cout << "Unit in " << optionalSaver->getPos().getRepr() << endl;
+		cout << "Unit in " << optionalSaver->getPos().get_repr() << endl;
 		for (Position pos : Position::allPossiblePositions())
 		{
 			if (isReachable(optionalSaver, pos))
 			{
-				cout << "Considerable move: " << optionalSaver->getPos().getRepr() << pos.getRepr() << endl;
+				cout << "Considerable move: " << optionalSaver->getPos().get_repr() << pos.get_repr() << endl;
 				Move move = commitMove(optionalSaver, pos, current);
 				bool check = isCheckTo(OPPONENT);
 				regret(move, current);
 				if (!check)
 				{
-					cout << "Move : " << move.source.getRepr() << pos.getRepr() << " saves the day!" << endl; 
+					cout << "Move : " << move.source.get_repr() << pos.get_repr() << " saves the day!" << endl;
 					return false;
 				}
 			}

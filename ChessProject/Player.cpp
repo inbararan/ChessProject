@@ -4,13 +4,13 @@
 Player::Player(Direction direction)
 {
 	_set = vector<Unit*>();
-	_set.push_back(new Rook(Position('a', 1, direction), Long));
+	_set.push_back(new Rook(Position('a', 1, direction), Short));
 	_set.push_back(new Knight(Position('b', 1, direction)));
-	_set.push_back(new Bishop(Position('c', 1, direction)));
+	//_set.push_back(new Bishop(Position('c', 1, direction)));
 	_set.push_back(new King(Position('d', 1, direction)));
-	_set.push_back(new Bishop(Position('f', 1, direction)));
+	//_set.push_back(new Bishop(Position('f', 1, direction)));
 	_set.push_back(new Knight(Position('g', 1, direction)));
-	_set.push_back(new Rook(Position('h', 1, direction), Short));
+	_set.push_back(new Rook(Position('h', 1, direction), Long));
 	_direction = direction;
 }
 /*

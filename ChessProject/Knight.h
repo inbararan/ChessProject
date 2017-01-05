@@ -8,8 +8,8 @@ private:
 	virtual char repr() const; // Actually `static` - indpendent of instance properties
 	bool isReachable(Position dest) const;
 public:
-	Knight(Position pos);
+	Knight(const Position& pos);
 
 	// All overrides inherited methods from Unit:
-	virtual vector<Position> pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const; // Throws exception if dest unreachable
+	virtual vector<Position> pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere, Direction playerDirection) const; // Throws exception if dest unreachable
 };

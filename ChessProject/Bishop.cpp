@@ -6,7 +6,7 @@ char Bishop::repr() const
 	return 'b';
 }
 
-Bishop::Bishop(Position pos) : Unit(pos)
+Bishop::Bishop(const Position& pos) : Unit(pos)
 {
 
 }
@@ -18,7 +18,7 @@ Bishop::~Bishop()
 // All overrides inherited methods from Unit:
 
 // Throws exception if dest unreachable
-vector<Position> Bishop::pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const
+vector<Position> Bishop::pathToPosition(const Position& dest, bool enemyThere, Direction playerDirection) const
 {
 	vector<Position> positions;
 	char minFile,maxFile;

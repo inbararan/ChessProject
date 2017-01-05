@@ -5,12 +5,12 @@ char King::repr() const
 	return 'k';
 }
 
-King::King(Position pos) : Unit(pos)
+King::King(const Position& pos) : Unit(pos)
 {
 
 }
 
-vector<Position> King::pathToPosition(Position dest, bool enemyThere, Direction playerDirection) const
+vector<Position> King::pathToPosition(const Position& dest, bool enemyThere, Direction playerDirection) const
 {
 	if (abs(dest.getFile() - _pos.getFile()) > 1 || abs(dest.getRank() - _pos.getRank()) > 1)
 	{
