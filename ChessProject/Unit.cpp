@@ -18,6 +18,7 @@ void Unit::move(const Position& dest)
 
 char Unit::repr(bool toUpper) const
 {
+	// According to protocol with fronted, unit color affects case
 	return toUpper ? toupper(repr()) : tolower(repr());
 }
 

@@ -26,8 +26,8 @@ public:
 	Direction getDirection() const;
 	vector<Unit*> getSet() const;
 
-	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	vector<Unit*> vitalUnits() const;
+	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	Unit* getUnit(Position pos) const;
 	void takeUnit(Unit* unit);
 	void insertUnit(Unit* unit);

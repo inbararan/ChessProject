@@ -127,6 +127,7 @@ Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Playe
 */
 string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 {
+	// Init report to default value so the former report won't get into it
 	moveReport.promotionAvaliable = false;
 	moveReport.needsReopen = false;
 	try
