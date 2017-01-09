@@ -66,6 +66,19 @@ bool Position::operator!=(const Position& other) const
 	return !(operator==(other));
 }
 
+bool Position::inPromotionRank(Direction playerDirection) const
+{
+	switch (playerDirection)
+	{
+	case Up:
+		return _rank == MAX_RANK;
+	case Down:
+		return _rank == MIN_RANK;
+	default:
+		throw UnknownDirectionException();
+	}
+}
+
 vector<Position> Position::allPossiblePositions()
 {
 	vector<Position> positions = vector<Position>();

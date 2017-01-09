@@ -22,15 +22,15 @@ char Unit::repr(bool toUpper) const
 	return toUpper ? toupper(repr()) : tolower(repr());
 }
 
-vector<Position> Unit::pathToPosition(const Position& dest, bool enemyThere, Direction playerDirection) const
+vector<Position> Unit::pathToPosition(const Position& dest, bool enemyThere) const
 {
-	MovementFlags unnessecaryFlags = { 0 };
-	return pathToPosition(dest, unnessecaryFlags, enemyThere, playerDirection);
+	MovementFlags unnessecaryFlags = { None, false };
+	return pathToPosition(dest, unnessecaryFlags, enemyThere);
 }
 
-bool Unit::isCastlingAvaliable(CastlingType castlingType) const
+bool Unit::vital() const
 {
-	return true;
+	return false;
 }
 
 bool Unit::canCommitEnPassant() const
@@ -38,7 +38,12 @@ bool Unit::canCommitEnPassant() const
 	return false;
 }
 
-bool Unit::vital() const
+bool Unit::canPromote() const
+{
+	return false;
+}
+
+bool Unit::castlingRelevant(CastlingType castlingType, char& destFile) const
 {
 	return false;
 }

@@ -29,6 +29,12 @@ typedef struct EnPassantDetails
 	bool isSet;
 } EnPassantDetails;
 
+typedef struct SimpleMove
+{
+	Unit* toBeMoved;
+	Position dest;
+};
+
 typedef struct Move
 {
 	Unit* moved;
@@ -36,12 +42,12 @@ typedef struct Move
 	Unit* taken;
 } Move;
 
-typedef struct MoveDetails
+typedef struct MoveReport
 {
 	Unit* moved;				// Last unit moved
 	bool promotionAvaliable;	// Is promotion avaliable for unit
 	bool needsReopen;			// In cases of promotion, castling or en passant the frontend shoud reopen
-} MoveDetails;
+} MoveReport;
 
 class Game
 {
@@ -55,12 +61,14 @@ private:
 	
 	Move commitMove(Unit* toMove, Position dest, Player& opponent); // Commits move and return moev data for later use
 
+	bool isDangeredBy(const Position& pos, bool playerIndicator);
+	bool isDangeredBy(vector<Position> positions, bool playerIndicator);
 	bool isCheckTo(bool playerIndicator);
 	bool isCheckmate(); // To opponent
 
-	bool isCastlingAvaliable(const vector<Position>& path, CastlingType castlingType);
-	void commitCastling(CastlingType castlingType);
+	bool castleIfAvaliable(CastlingType castlingType);
 
+	vector<Position> getPath(Unit* unit, const Position& pos, bool playerIndicator);
 	bool isClear(vector<Position> path);		// Path is clear of any unit
 
 	void regret(Move move, Player& opponent);
@@ -68,7 +76,7 @@ public:
 	Game();
 	Game(const Game& other);
 
-	string nextMove(string moveRepr, MoveDetails& moveReport); // Returns code
+	string nextMove(string moveRepr, MoveReport& moveReport); // Returns code
 	string getBoardRepr() const;
 	bool promote(Unit* unit, char optionRepr); // Assuming promotion avaliable. Return value depends on optionRepr validity
 };

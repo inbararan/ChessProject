@@ -40,6 +40,7 @@ public:
 	int index() const; // Index in board repr
 	bool operator==(const Position& other) const;
 	bool operator!=(const Position& other) const;
-	
+	bool inPromotionRank(Direction playerDirection) const;
+
 	static vector<Position> allPossiblePositions(); // All possible positions on board
 };

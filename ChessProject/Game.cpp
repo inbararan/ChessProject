@@ -13,25 +13,45 @@ Move Game::commitMove(Unit* toMove, Position dest, Player& opponent)
 	return move;
 }
 
+bool Game::isDangeredBy(const Position& pos, bool playerIndicator)
+{
+	for (Unit* opponentUnit : getPlayer(!playerIndicator).getSet())
+	{
+		try
+		{
+			if (isClear(opponentUnit->pathToPosition(pos, true)))
+			{
+				return true;
+			}
+		}
+		catch (UnreachablePositionException e)
+		{
+			// vital unrachable by opponentUnit, thats all
+		}
+	}
+	return false;
+}
+
+bool Game::isDangeredBy(vector<Position> positions, bool playerIndicator)
+{
+	for (Position pos : positions)
+	{
+		if (isDangeredBy(pos, playerIndicator))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Game::isCheckTo(bool playerIndicator)
 {
 	vector<Unit*> vitals = getPlayer(playerIndicator).vitalUnits();
-	vector<Unit*> opponentUnits = getPlayer(!playerIndicator).getSet();
 	for (Unit* vital : vitals)
 	{
-		for (Unit* opponentUnit : opponentUnits)
+		if (isDangeredBy(vital->getPos(), playerIndicator))
 		{
-			try
-			{
-				if (isClear(opponentUnit->pathToPosition(vital->getPos(), true, getPlayer(!playerIndicator).getDirection())))
-				{
-					return true;
-				}
-			}
-			catch (UnreachablePositionException e)
-			{
-				// vital unrachable by opponentUnit, thats all
-			}
+			return true;
 		}
 	}
 	return false;
@@ -55,7 +75,7 @@ bool Game::isCheckmate() // To opponent
 				vector<Position> path = vector<Position>();
 				try
 				{
-					path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr, getPlayer(OPPONENT).getDirection());
+					path = optionalSaver->pathToPosition(pos, getPlayer(CURRENT).getUnit(pos) != nullptr);
 				}
 				catch (UnreachablePositionException e)
 				{
@@ -78,26 +98,40 @@ bool Game::isCheckmate() // To opponent
 	return true;
 }
 
-bool Game::isCastlingAvaliable(const vector<Position>& path, CastlingType castlingType)
+bool Game::castleIfAvaliable(CastlingType castlingType)
 {
-	/*
-	If at least one unit returns false for isCastlingAvaliable, 
-	it means the King or relevant Rook moved, 
-	which means castling unavaliable.
-	*/
+	vector<SimpleMove> relevantMoves = vector<SimpleMove>();
+	char destFile = ' ';
+	// Collect units that will be involved
 	for (Unit* unit : getPlayer(CURRENT).getSet())
 	{
-		if (!unit->isCastlingAvaliable(castlingType))
+		if (unit->castlingRelevant(castlingType, destFile))
 		{
-			return false;
+			SimpleMove move = { unit, Position(destFile, unit->getPos().getRank()) };
+			vector<Position> path = getPath(unit, move.dest, CURRENT);
+			if (isClear(path) && !(unit->vital() && isDangeredBy(path, OPPONENT)))
+			{
+				relevantMoves.push_back(move);
+			}
 		}
 	}
-	return true;
+	if (relevantMoves.size() > 1) // Cannot castle with only one unit, it takes two to tango
+	{
+		for (SimpleMove move : relevantMoves)
+		{
+			move.toBeMoved->move(move.dest);
+		}
+	}
+	else // Only one (or none) of the units can castle this castling type
+	{
+		return false;
+	}
+
 }
 
-void Game::commitCastling(CastlingType castlingType)
+vector<Position> Game::getPath(Unit* unit, const Position& dest, bool playerIndicator)
 {
-
+	return unit->pathToPosition(dest, getPlayer(!playerIndicator).hasUnitIn(dest));
 }
 
 bool Game::isClear(vector<Position> path)
@@ -125,11 +159,10 @@ Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Playe
 	_enPassantDetails = other._enPassantDetails;
 }
 */
-string Game::nextMove(string moveRepr, MoveDetails& moveReport)
+string Game::nextMove(string moveRepr, MoveReport& moveReport)
 {
 	// Init report to default value so the former report won't get into it
-	moveReport.promotionAvaliable = false;
-	moveReport.needsReopen = false;
+	moveReport = { nullptr, false, false };
 	try
 	{
 		Position src = Position(moveRepr.substr(0, 2));
@@ -147,50 +180,32 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 		{
 			return DST_OCCUPIED;
 		}
-		MovementFlags flags = { 0 };
+		MovementFlags flags = { None, false };
 		// Check if src can move to dst
-		vector<Position> path = unit->pathToPosition(dst, flags, getPlayer(OPPONENT).getUnit(dst) != nullptr, getPlayer(CURRENT).getDirection());
-		if (isClear(path))
+		vector<Position> path = unit->pathToPosition(dst, flags, getPlayer(OPPONENT).getUnit(dst) != nullptr);
+		if (flags.castling) // Move is castling
+		{
+			if (castleIfAvaliable(flags.castling))
+			{
+				moveReport.needsReopen = true;
+			}
+		}
+		else if (isClear(path)) // Regular move
 		{
 			// Save move for the opportunity to regret
 			Move move = commitMove(unit, dst, getPlayer(OPPONENT));
 			// If move causes check on current player its illegal
 			if (!isCheckTo(CURRENT)) // Legal move!
 			{
-				// Check if move is a castling move and terminate move if such castling not avaliable
-				if (flags.castling != None)
-				{
-					if (isCastlingAvaliable(path, flags.castling))
-					{
-						commitCastling(flags.castling);
-					}
-					else
-					{
-						return ILLEGAL_MOVEMENT;
-					}
-				}
 				// Remove taken unit to avoid memory leaks
 				if (move.taken)
 				{
 					delete move.taken;
 				}
-				
-				// Main program should be informed about promotion & reopen to habdle such events
+				// Main program should be informed about promotion & reopen to handle such events
 				moveReport.moved = unit;
-				moveReport.promotionAvaliable = flags.promotion;
-				moveReport.needsReopen = flags.promotion || flags.castling != None || flags.enPassant;
-				// Save status befor current player changes
-				string status = OK;
-				if (isCheckTo(OPPONENT))
-				{
-					status = CHECK;
-				}
-				else if (isCheckmate())
-				{
-					status = CHECKMATE;
-				}
-				_currentPlayerIndicator = !_currentPlayerIndicator;
-				return status;
+				moveReport.promotionAvaliable = unit->canPromote() && dst.inPromotionRank(getPlayer(CURRENT).getDirection());
+				moveReport.needsReopen = flags.enPassant;
 			}
 			else // Move caused check to current player
 			{
@@ -211,6 +226,19 @@ string Game::nextMove(string moveRepr, MoveDetails& moveReport)
 	{
 		return ILLEGAL_MOVEMENT;
 	}
+	// End turn:
+	// Save status befor current player changes
+	string status = OK;
+	if (isCheckTo(OPPONENT))
+	{
+		status = CHECK;
+	}
+	else if (isCheckmate())
+	{
+		status = CHECKMATE;
+	}
+	_currentPlayerIndicator = !_currentPlayerIndicator;
+	return status;
 }
 
 string Game::getBoardRepr() const

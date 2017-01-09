@@ -27,6 +27,7 @@ public:
 	vector<Unit*> getSet() const;
 
 	vector<Unit*> vitalUnits() const;
+	bool hasUnitIn(const Position& pos) const;
 	bool hasUnitsIn(vector<Position> positions) const; // Use for argument enemyThere in Unit::pathToMove
 	Unit* getUnit(Position pos) const;
 	void takeUnit(Unit* unit);

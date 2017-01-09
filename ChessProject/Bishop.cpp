@@ -18,7 +18,7 @@ Bishop::~Bishop()
 // All overrides inherited methods from Unit:
 
 // Throws exception if dest unreachable
-vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere, Direction playerDirection) const
+vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const
 {
 	vector<Position> positions;
 

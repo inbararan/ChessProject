@@ -53,7 +53,7 @@ void main()
 		// according the protocol. Ex: e2e4           (move e2 to e4)
 
 		cout << "Recieved from graphics: " << msgFromGraphics << endl;
-		MoveDetails report = { 0 };
+		MoveReport report = { 0 };
 		strcpy_s(msgToGraphics, game.nextMove(msgFromGraphics, report).c_str()); // msgToGraphics should contain the result of the operation
 
 		if (report.promotionAvaliable) // Promotion is avaliable for user
@@ -69,7 +69,13 @@ void main()
 		}
 		if (report.needsReopen)
 		{
-			cout << "Assume I reopened please" << endl;
+			p.close();
+			system("taskkill chessGraphics.exe");
+			Sleep(500);
+			system("start chessGraphics.exe");
+			Sleep(500);
+			p.connect();
+			strcpy_s(msgToGraphics, game.getBoardRepr().c_str());
 		}
 
 		cout << "Sending to graphics: " << msgToGraphics << endl;

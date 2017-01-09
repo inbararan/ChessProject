@@ -57,11 +57,16 @@ vector<Unit*> Player::vitalUnits() const
 	return units;
 }
 
+bool Player::hasUnitIn(const Position& pos) const
+{
+	return getUnit(pos) != nullptr;
+}
+
 bool Player::hasUnitsIn(vector<Position> positions) const
 {
 	for (Position pos: positions)
 	{
-		if (getUnit(pos) != nullptr)
+		if (hasUnitIn(pos))
 		{
 			return true;
 		}
