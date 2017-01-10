@@ -13,4 +13,5 @@ public:
 	virtual vector<Position> pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const; // Throws exception if dest unreachable
 
 	virtual bool vital() const;
+	virtual bool castlingRelevant(CastlingType castlingType, char& destFile) const;
 };

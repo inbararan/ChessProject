@@ -70,7 +70,7 @@ void main()
 		if (report.needsReopen)
 		{
 			p.close();
-			system("taskkill chessGraphics.exe");
+			system("taskkill /im chessGraphics.exe");
 			Sleep(500);
 			system("start chessGraphics.exe");
 			Sleep(500);

@@ -18,7 +18,7 @@ class Unit
 {
 protected:
 	Position _pos;
-	bool _moved;
+	int _movesCount;
 
 	virtual char repr() const = 0; // Lowercase, indpendent of instance properties
 public:
@@ -30,6 +30,8 @@ public:
 	virtual vector<Position> pathToPosition(const Position& dest, bool enemyThere) const; // Throws exception if dest unreachable
 	virtual vector<Position> pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const = 0; // Throws exception if dest unreachable
 	void move(const Position& dest); // No validation, just moves.
+	void regretMove(const Position& src); // Decreases _movesCount instead of increasing it
+	bool moved() const;
 
 	virtual bool vital() const; // True for King only
 	virtual bool canCommitEnPassant() const; // True on Pawn only

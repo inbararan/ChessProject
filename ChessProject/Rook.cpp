@@ -70,3 +70,23 @@ vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags
 	return positions;
 }
 
+bool Rook::castlingRelevant(CastlingType castlingType, char& destFile) const
+{
+	cout << "input castling type: long: " << (castlingType == Long) << ", short: " << (castlingType == Short) << endl;
+	cout << "self  castling type: long: " << (_castlingAvaliablity == Long) << ", short: " << (_castlingAvaliablity == Short) << endl;
+	cout << "pos:" << _pos.get_repr() << endl;
+	switch (castlingType)
+	{
+	case Long:
+		destFile = _pos.getFile() - 3;
+		break;
+	case Short:
+		destFile = _pos.getFile() + 2;
+		break;
+	default: // Shouldn't be called ever (castlingType == None)
+		return false;
+	}
+	cout << !moved() << endl;
+	cout << (castlingType == _castlingAvaliablity) << endl;
+	return (castlingType == _castlingAvaliablity) && !moved();
+}
