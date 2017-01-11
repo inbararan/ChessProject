@@ -14,11 +14,13 @@ Knight::Knight(const Position& pos) : Unit(pos)
 
 // All overrides inherited methods from Unit:
 // Throws exception if dest unreachable
-vector<Position> Knight::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const
-{
+
+vector<Position> Knight::pathToPosition(const Position& dest, MovementFlags& flags) const
+ {
+	flags = DEFAULT_FLAGS;
 	if (!isReachable(dest))
 	{
-		throw UnreachablePositionException();
+		flags.avaliability = Unreachable;
 	}
 	return vector<Position>();
 }

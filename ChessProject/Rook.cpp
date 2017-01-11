@@ -11,17 +11,21 @@ Rook::Rook(const Position& pos) : Unit(pos), _castlingAvaliablity(None)
 
 Rook::Rook(const Position& pos, CastlingType castlingAvaliablity) : Unit(pos), _castlingAvaliablity(castlingAvaliablity)
 {
+
 }
 
 // All overrides inherited methods from Unit:
-vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const
+
+vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags) const 
 {
 	int minRank, maxRank;
 	char minFile, maxFile; 
 	vector<Position> positions;
+
+	flags = DEFAULT_FLAGS;
 	if (dest.getFile() != _pos.getFile() && dest.getRank() != _pos.getRank())
 	{
-		throw UnreachablePositionException();
+		flags.avaliability = Unreachable;
 	}
 	else
 	{

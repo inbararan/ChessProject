@@ -12,6 +12,14 @@ Player::Player(Direction direction)
 	_set.push_back(new Bishop(Position('f', 1, direction)));
 	_set.push_back(new Knight(Position('g', 1, direction)));
 	_set.push_back(new Rook(Position('h', 1, direction), Long));
+	_set.push_back(new Pawn(Position('a', 2, direction)));
+	_set.push_back(new Pawn(Position('b', 2, direction)));
+	_set.push_back(new Pawn(Position('c', 2, direction)));
+	_set.push_back(new Pawn(Position('d', 2, direction)));
+	_set.push_back(new Pawn(Position('e', 2, direction)));
+	_set.push_back(new Pawn(Position('f', 2, direction)));
+	_set.push_back(new Pawn(Position('g', 2, direction)));
+	_set.push_back(new Pawn(Position('h', 2, direction)));
 	_direction = direction;
 }
 /*

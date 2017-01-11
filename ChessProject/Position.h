@@ -18,7 +18,9 @@ using namespace std;
 
 #define BOARD_SIZE 8
 
-enum Direction{Up = 1, Down = -1};
+enum Direction{Up = 0x2, Down = 0x1};
+
+typedef char direction_t;
 
 class Position
 {

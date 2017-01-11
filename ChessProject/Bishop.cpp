@@ -18,10 +18,11 @@ Bishop::~Bishop()
 // All overrides inherited methods from Unit:
 
 // Throws exception if dest unreachable
-vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& flags, bool enemyThere) const
+
+vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& flags) const
 {
 	vector<Position> positions;
-
+	flags = DEFAULT_FLAGS;
 	if (abs(_pos.getFile() - dest.getFile()) == abs(_pos.getRank() - dest.getRank()))
 	{
 		if (_pos.getRank() < dest.getRank() && _pos.getFile() < dest.getFile())
@@ -53,11 +54,10 @@ vector<Position> Bishop::pathToPosition(const Position& dest, MovementFlags& fla
 			}
 		}
 
-		
 	}
 	else
 	{
-		throw UnreachablePositionException();
+		flags.avaliability = Unreachable;
 	}
 	return positions;
 }

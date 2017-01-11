@@ -33,18 +33,7 @@ char Unit::repr(bool toUpper) const
 	return toUpper ? toupper(repr()) : tolower(repr());
 }
 
-vector<Position> Unit::pathToPosition(const Position& dest, bool enemyThere) const
-{
-	MovementFlags unnessecaryFlags = { None, false };
-	return pathToPosition(dest, unnessecaryFlags, enemyThere);
-}
-
 bool Unit::vital() const
-{
-	return false;
-}
-
-bool Unit::canCommitEnPassant() const
 {
 	return false;
 }

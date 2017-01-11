@@ -5,11 +5,9 @@ Player& Game::getPlayer(bool playerIndicator)
 	return playerIndicator ? _player1 : _player2;
 }
 
-Move Game::commitMove(Unit* toMove, Position dest, Player& opponent)
+FullMove Game::commitMove(Unit* toMove, Position dest, Player& opponent)
 {
-	Move move = { toMove, toMove->getPos(), opponent.getUnit(dest) };
-	if (dest == Position('c', 7))
-		cout << endl;
+	FullMove move = { toMove, toMove->getPos(), opponent.getUnit(dest) };
 	toMove->move(dest);
 	opponent.takeUnit(move.taken);
 	return move;
@@ -22,7 +20,7 @@ bool Game::isDangeredBy(const Position& pos, bool opponentPlayerIndicator)
 		//cout << opponentUnit->getPos().get_repr() << " might danger " << pos.get_repr() << endl;
 		try
 		{
-			if (isClear(opponentUnit->pathToPosition(pos, true)))
+			if (isClear(getPath(opponentUnit, pos, !opponentPlayerIndicator)))
 			{
 				cout << opponentUnit->getPos().get_repr() << " dangers " << pos.get_repr() << endl;
 				return true;
@@ -79,7 +77,7 @@ bool Game::isCheckmate() // To opponent
 				vector<Position> path = vector<Position>();
 				try
 				{
-					path = getPath(optionalSaver, pos, OPPONENT);
+					path = getPath(optionalSaver, pos, CURRENT);
 				}
 				catch (UnreachablePositionException e)
 				{
@@ -88,15 +86,11 @@ bool Game::isCheckmate() // To opponent
 				}
 				if (isClear(path)) // Path must be clear
 				{
-					if (pos == Position('c', 7))
-						cout << endl;
-					Move move = commitMove(optionalSaver, pos, getPlayer(CURRENT));
+					FullMove move = commitMove(optionalSaver, pos, getPlayer(CURRENT));
 					bool check = isCheckTo(OPPONENT);
 					regret(move, getPlayer(CURRENT));
-					cout << move.source.get_repr() << pos.get_repr() << " might save the day..." << endl;
 					if (!check) // That move removes the check!
 					{
-						cout << move.source.get_repr() << pos.get_repr() << " saves the day!" << endl;
 						return false;
 					}
 				}
@@ -108,7 +102,6 @@ bool Game::isCheckmate() // To opponent
 
 bool Game::castleIfAvaliable(CastlingType castlingType)
 {
-	cout << "CASTLING" << endl;
 	vector<SimpleMove> relevantMoves = vector<SimpleMove>();
 	char destFile = ' ';
 	// Collect units that will be involved
@@ -116,13 +109,10 @@ bool Game::castleIfAvaliable(CastlingType castlingType)
 	{
 		if (unit->castlingRelevant(castlingType, destFile))
 		{
-			cout << "Castling relevant to " << unit->getPos().get_repr() << endl;
 			SimpleMove move = { unit, Position(destFile, unit->getPos().getRank()) };
-			vector<Position> path = getPath(unit, move.dest, CURRENT);
-			cout << isClear(path) << unit->vital() << isDangeredBy(move.dest, OPPONENT) << isDangeredBy(path, OPPONENT) << endl;
+			vector<Position> path = getPath(unit, move.dest, OPPONENT);
 			if (isClear(path) && !(unit->vital() && (isDangeredBy(move.dest, OPPONENT) || isDangeredBy(path, OPPONENT))))
 			{
-				cout << "Castling fine with " << unit->getPos().get_repr() << endl;
 				relevantMoves.push_back(move);
 			}
 		}
@@ -131,7 +121,6 @@ bool Game::castleIfAvaliable(CastlingType castlingType)
 	{
 		for (SimpleMove move : relevantMoves)
 		{
-			cout << "Finally moving (castling) " << move.toBeMoved->getPos().get_repr() << " to " << move.dest.get_repr() << endl;
 			move.toBeMoved->move(move.dest);
 		}
 		return true;
@@ -142,9 +131,41 @@ bool Game::castleIfAvaliable(CastlingType castlingType)
 	}
 }
 
-vector<Position> Game::getPath(Unit* unit, const Position& dest, bool playerIndicator)
+vector<Position> Game::getPath(Unit* unit, const Position& dest, bool opponentIndicator)
 {
-	return unit->pathToPosition(dest, getPlayer(!playerIndicator).hasUnitIn(dest));
+	MovementFlags flags = DEFAULT_FLAGS;
+	return getPath(unit, flags, dest, getPlayer(opponentIndicator).getUnit(dest) != nullptr);
+}
+
+vector<Position> Game::getPath(Unit* unit, bool enemyThereToPush, const Position& dest)
+{
+	MovementFlags flags = DEFAULT_FLAGS;
+	return getPath(unit, flags, dest, enemyThereToPush);
+}
+
+vector<Position> Game::getPath(Unit* unit, MovementFlags& flags, bool enemyThere, const Position& dest)
+{
+	vector<Position> path = unit->pathToPosition(dest, flags);
+	if (flags.avaliability == Unreachable ||
+		(flags.avaliability == Regular && enemyThere) ||
+		(flags.avaliability == Capture && !enemyThere))
+	{
+		throw UnreachablePositionException();
+	}
+	return path;
+}
+
+vector<Position> Game::getPath(Unit* unit, MovementFlags& flags, const Position& dest, bool opponentIndicator)
+{
+	vector<Position> path = unit->pathToPosition(dest, flags);
+	if ((flags.avaliability == Unreachable) ||
+		((flags.avaliability == Regular) && (getPlayer(opponentIndicator).getUnit(dest) != nullptr)) ||
+		((flags.avaliability == Capture) && (getPlayer(opponentIndicator).getUnit(dest) == nullptr)) ||
+		(flags.moveDirection & getPlayer(opponentIndicator).getDirection() == 0)) // Direction flag doesn't player direction
+	{
+		throw UnreachablePositionException();
+	}
+	return path;
 }
 
 bool Game::isClear(vector<Position> path)
@@ -153,34 +174,74 @@ bool Game::isClear(vector<Position> path)
 	return !getPlayer(CURRENT).hasUnitsIn(path) && !getPlayer(OPPONENT).hasUnitsIn(path);
 }
 
-void Game::regret(Move move, Player& opponent)
+void Game::regret(FullMove move, Player& opponent)
 {
 	// Reverses move's affection over game status
 	move.moved->regretMove(move.source);
 	opponent.insertUnit(move.taken);
 }
 
+void Game::validateMoveLegality(Unit* unit, const Position& dest, MoveReport& report) // For current player
+{
+	MovementFlags flags = DEFAULT_FLAGS;
+	// Check if src can move to dst
+	vector<Position> path = vector<Position>();
+	try
+	{
+		path = getPath(unit, flags, dest, OPPONENT);
+	}
+	catch (UnreachablePositionException e)
+	{
+		throw IllegalMovement();
+	}
+	if (flags.castling) // Move is castling
+	{
+		if (!isCheckTo(CURRENT) && castleIfAvaliable(flags.castling))
+		{
+			report.needsReopen = true;
+		}
+		else
+		{
+			throw IllegalMovement();
+		}
+	}
+	else if (isClear(path)) // Regular move
+	{
+		// Save move for the opportunity to regret
+		FullMove move = commitMove(unit, dest, getPlayer(OPPONENT));
+		// If move causes check on current player its illegal
+		if (!isCheckTo(CURRENT)) // Legal move!
+		{
+			// Remove taken unit to avoid memory leaks
+			if (move.taken)
+			{
+				delete move.taken;
+			}
+			// Main program should be informed about promotion & reopen to handle such events
+			report.moved = unit;
+			report.promotionAvaliable = unit->canPromote() && dest.inPromotionRank(getPlayer(CURRENT).getDirection());
+			report.needsReopen = report.promotionAvaliable; // Add enPassant
+		}
+		else // Move caused check to current player
+		{
+			regret(move, getPlayer(OPPONENT));
+			throw SteppingIntoFire();
+		}
+	}
+	else // Path is not clear
+	{
+		throw IllegalMovement();
+	}
+}
+
 Game::Game() : _player1(Player(Up)), _player2(Player(Down))
 {
 	_currentPlayerIndicator = WHITE;
-	_enPassantDetails.isSet = false;
 }
-/*
-Game::Game(const Game& other) : _player1(Player(other._player1)), _player2(Player(other._player2))
+string Game::nextMove(string moveRepr, MoveReport& report)
 {
-	_currentPlayerIndicator = other._currentPlayerIndicator;
-	_enPassantDetails = other._enPassantDetails;
-}
-*/
-string Game::nextMove(string moveRepr, MoveReport& moveReport)
-{
-	cout << "MOVING" << endl;
-	for (Unit* u : getPlayer(CURRENT).getSet())
-		cout << "C : " << u->repr(false) << " : " << u->getPos().get_repr() << endl;
-	for (Unit* u : getPlayer(OPPONENT).getSet())
-		cout << "O : " << u->repr(false) << " : " << u->getPos().get_repr() << endl;
 	// Init report to default value so the former report won't get into it
-	moveReport = { nullptr, false, false };
+	report = { nullptr, false, false };
 	try
 	{
 		Position src = Position(moveRepr.substr(0, 2));
@@ -198,58 +259,21 @@ string Game::nextMove(string moveRepr, MoveReport& moveReport)
 		{
 			return DST_OCCUPIED;
 		}
-		MovementFlags flags = { None, false };
-		// Check if src can move to dst
-		vector<Position> path = unit->pathToPosition(dst, flags, getPlayer(OPPONENT).getUnit(dst) != nullptr);
-		if (flags.castling) // Move is castling
-		{
-			if (!isCheckTo(CURRENT) && castleIfAvaliable(flags.castling))
-			{
-				moveReport.needsReopen = true;
-			}
-			else
-			{
-				return ILLEGAL_MOVEMENT;
-			}
-		}
-		else if (isClear(path)) // Regular move
-		{
-			// Save move for the opportunity to regret
-			Move move = commitMove(unit, dst, getPlayer(OPPONENT));
-			// If move causes check on current player its illegal
-			if (moveRepr == "a7a8")
-				cout << endl;
-			if (!isCheckTo(CURRENT)) // Legal move!
-			{
-				// Remove taken unit to avoid memory leaks
-				if (move.taken)
-				{
-					delete move.taken;
-				}
-				// Main program should be informed about promotion & reopen to handle such events
-				moveReport.moved = unit;
-				moveReport.promotionAvaliable = unit->canPromote() && dst.inPromotionRank(getPlayer(CURRENT).getDirection());
-				moveReport.needsReopen = flags.enPassant || moveReport.promotionAvaliable;
-			}
-			else // Move caused check to current player
-			{
-				regret(move, getPlayer(OPPONENT));
-				return MOVE_CAUSES_SELF_CHECK;
-			}
-		}
-		else // Path is not clear
-		{
-			return ILLEGAL_MOVEMENT;
-		}
+		validateMoveLegality(unit, dst, report);
 	}
 	catch (OutOfBoardException e) // Src or dst are not valid positions
 	{
 		return OUT_OF_BOARD;
 	}
-	catch (UnreachablePositionException e) // Dst unreachable by user
+	catch (IllegalMovement e) // Dst unreachable by user
 	{
 		return ILLEGAL_MOVEMENT;
 	}
+	catch (SteppingIntoFire e)
+	{
+		return MOVE_CAUSES_SELF_CHECK;
+	}
+	// No exception was thrown!
 	// End turn:
 	// Save status befor current player changes
 	string status = OK;
@@ -259,7 +283,6 @@ string Game::nextMove(string moveRepr, MoveReport& moveReport)
 		if (isCheckmate())
 		{
 			status = CHECKMATE;
-			moveReport.needsReopen = true;
 		}
 	}
 	_currentPlayerIndicator = !_currentPlayerIndicator;

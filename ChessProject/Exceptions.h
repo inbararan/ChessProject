@@ -4,17 +4,22 @@
 
 using namespace std;
 
-// Position::Position throws if row or col out of borders
 class OutOfBoardException : exception
 {
 };
 
-// Unit::pathToPosition throws if dest unrachable
+class UnknownDirectionException : exception
+{
+};
+
 class UnreachablePositionException : exception
 {
 };
 
-// Position::Position (one overload) throws if playerDirection is not Up nor Down
-class UnknownDirectionException : exception
+class IllegalMovement : exception
+{
+};
+
+class SteppingIntoFire : exception
 {
 };
