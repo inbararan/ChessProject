@@ -97,8 +97,6 @@ Unit* Player::getUnit(Position pos) const
 void Player::takeUnit(Unit* unit)
 {
 	// Remove unit from set
-	if (unit)
-		cout << "Taking unit " << unit->getPos().get_repr() << endl;
 	_set.erase(remove(_set.begin(), _set.end(), unit), _set.end());
 }
 
@@ -106,7 +104,6 @@ void Player::insertUnit(Unit* unit)
 {
 	if (unit != nullptr) // We don't want nullptrs in _set, do we?
 	{
-		cout << "Inserting unit " << unit->getPos().get_repr() << endl;
 		_set.push_back(unit);
 	}
 }

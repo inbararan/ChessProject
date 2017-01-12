@@ -17,12 +17,10 @@ bool Game::isDangeredBy(const Position& pos, bool opponentPlayerIndicator)
 {
 	for (Unit* opponentUnit : getPlayer(opponentPlayerIndicator).getSet())
 	{
-		//cout << opponentUnit->getPos().get_repr() << " might danger " << pos.get_repr() << endl;
 		try
 		{
 			if (isClear(getPath(opponentUnit, pos, !opponentPlayerIndicator)))
 			{
-				cout << opponentUnit->getPos().get_repr() << " dangers " << pos.get_repr() << endl;
 				return true;
 			}
 		}

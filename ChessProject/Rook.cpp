@@ -18,8 +18,6 @@ Rook::Rook(const Position& pos, CastlingType castlingAvaliablity) : Unit(pos), _
 
 vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags) const 
 {
-	int minRank, maxRank;
-	char minFile, maxFile; 
 	vector<Position> positions;
 
 	flags = DEFAULT_FLAGS;
@@ -76,9 +74,6 @@ vector<Position> Rook::pathToPosition(const Position& dest, MovementFlags& flags
 
 bool Rook::castlingRelevant(CastlingType castlingType, char& destFile) const
 {
-	cout << "input castling type: long: " << (castlingType == Long) << ", short: " << (castlingType == Short) << endl;
-	cout << "self  castling type: long: " << (_castlingAvaliablity == Long) << ", short: " << (_castlingAvaliablity == Short) << endl;
-	cout << "pos:" << _pos.get_repr() << endl;
 	switch (castlingType)
 	{
 	case Long:

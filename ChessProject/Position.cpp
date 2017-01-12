@@ -40,14 +40,14 @@ int Position::getRank() const
 	return _rank;
 }
 
-bool Position::sameFile(Position pos) const
+bool Position::sameFile(const Position& other) const
 {
-	return _file == pos._file;
+	return _file == other._file;
 }
 
-bool Position::sameRank(Position pos) const
+bool Position::sameRank(const Position& other) const
 {
-	return _rank == pos._rank;
+	return _rank == other._rank;
 }
 
 int Position::index() const

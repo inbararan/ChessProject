@@ -34,11 +34,10 @@ public:
 	
 	char getFile() const;
 	int getRank() const;
-	string get_repr () const { string repr = ""; repr += _file; repr += _rank + '0'; return repr; };
 
-	bool sameFile(Position pos) const;
-	bool sameRank(Position pos) const;
-
+	bool sameFile(const Position& other) const;
+	bool sameRank(const Position& other) const;
+	
 	int index() const; // Index in board repr
 	bool operator==(const Position& other) const;
 	bool operator!=(const Position& other) const;
